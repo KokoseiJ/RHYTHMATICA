@@ -1,13 +1,13 @@
 def get_info(file):
+	"""
+	0|Flamingo #name
+	1|Kero Kero Bonito #name
+	2|89 #bpm
+	3|1489 #note
+	4|1500 #length
+	#difficulty: ~2 easy 3~5 medium 6~ hard
+	"""
 	try:
-		"""
-		0|Flamingo #name
-		1|Kero Kero Bonito #name
-		2|89 #bpm
-		3|1489 #note
-		4|1500 #length
-		difficulty: ~2 easy 3~5 medium 6~ hard
-		"""
 		infolist = file.read().split("\n")
 		notepermin = int(infolist[3]) / (int(infolist[4]) / 60)
 		if notepermin < 3:
@@ -22,7 +22,23 @@ def get_info(file):
 	#return value : name,		artist,		BPM,	   note amount,	song length, difficulty
 	except Exception as e:
 		return (1, "0of! looks like your info file is written by a n00b!\nError Message:"+e)
+
 def get_note(file):
+	"""
+	1|ver:A3
+	2|/
+	3|specific second and repeat
+	and repeats for 6 times
+	"""
+	"""
+	1|ver:A4
+	2|b180
+	3|d4
+	4|w18.9
+	5|2
+	6|6
+	7|/4
+	"""
 	try:
 		notelist =  file.read().split("\n")
 		rtnlist = [[], [], [], [], [], []]
@@ -54,3 +70,9 @@ def get_note(file):
 		return rtnlist
 	except Exception as e:
 		return (1, "Yeouch! There is a wild exception in the note file!\nError Message: "+e)
+
+def get_center(screen, surf, loc = (0.5, 0.5), anchor = (0.5, 0.5)): #put screen's sizes and surface's sizes, desired location and anchor(both between 0 and 1)
+    return ((screen[0] * loc[0]) - (surf[0] * anchor[0]), (screen[1] * loc[1]) - (surf[1] * anchor[1])) #returns calculated answer. ez but kinda complicated to do with lambda
+
+def resize(surf, size): #put surface's size and desired size. default size is 1
+    return (int(surf[0] * size), int(surf[1] * size)) #why did I defined a whole fuction? This could be done with lambda xD
