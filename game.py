@@ -60,6 +60,6 @@ while True:
                 print("n pressed")
                 break
     else:
-        rolex.tick(130/60)#130 is the BPM of the song. BPM/60 makes BPM to beat per second, and I doubled it up to call these codes 2 times a beat.
+        rolex.tick(130/60*2)#130 is the BPM of the song. BPM/60 makes BPM to beat per second, and I doubled it up to call these codes 2 times a beat.
         continue
     break
