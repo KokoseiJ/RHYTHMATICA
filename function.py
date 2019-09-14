@@ -74,5 +74,5 @@ def get_note(file):
 def get_center(screen, surf, loc = (0.5, 0.5), anchor = (0.5, 0.5)): #put screen's sizes and surface's sizes, desired location and anchor(both between 0 and 1)
     return ((screen[0] * loc[0]) - (surf[0] * anchor[0]), (screen[1] * loc[1]) - (surf[1] * anchor[1])) #returns calculated answer. ez but kinda complicated to do with lambda
 
-def resize(surf, size): #put surface's size and desired size. default size is 1
-    return (int(surf[0] * size), int(surf[1] * size)) #why did I defined a whole fuction? This could be done with lambda xD
+def resize(surf, size): #put surface's size and desired size. default size is 1. 2 will double up the size.
+    return (int(surf[0] * size), int(surf[1] * size)) #why did I define this fuction? This could be done with lambda xD
