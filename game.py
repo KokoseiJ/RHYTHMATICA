@@ -5,6 +5,7 @@ from pygame.locals import *
 from random import randint
 print("ligma")
 #initialize screen
+pygame.mixer.pre_init(44100, -16, 2, 1024) #Little Buffer, Less Delay!
 pygame.init()
 screen = pygame.display.set_mode(size = (1280, 720))
 pygame.display.set_caption("RHYTHMATICA")
@@ -34,32 +35,29 @@ pressntostart = notoblack.render("Press N to start", 1, (0, 0, 0))
 intromusic = pygame.mixer.Sound("res/audio/effect/Rhythmatica.wav")
 
 #aaand, finally we draw these shit to the screen! yay!
-#first, blit the background.
-screen.blit(background, (0, 0))
-#intro_electron class have its own blit method, and will blit itself to the argument. so we call all of them.
-for x in electrons:
-    x.blit(screen)
-#blit logo, kind(maybe not)text to the screen.
-screen.blit(logo, get_center(screen.get_size(), logo.get_size()))
-screen.blit(pressntostart, get_center(screen.get_size(), pressntostart.get_size(), (0.5, 0.75)))
-#and... flip! now you can see everything in the screen!
-pygame.display.flip()
+#at the start, we play the song.
 intromusic.play()
 while True:
+    #first, blit the background.
     screen.blit(background, (0, 0))
+    #intro_electron class have its own blit method, and will blit itself to the argument. so we call all of them.
     for x in electrons:
         x.blit(screen)
+    #blit logo, kind(maybe not)text to the screen.
     screen.blit(logo, get_center(screen.get_size(), logo.get_size()))
     screen.blit(pressntostart, get_center(screen.get_size(), pressntostart.get_size(), (0.5, 0.75)))
+    #and... flip! now you can see everything in the screen!
     pygame.display.flip()
-    for event in pygame.event.get():
-        if event.type == QUIT:
-            exit()
-        elif event.type == KEYDOWN:
-            if event.key == K_n:
-                print("n pressed")
-                break
-    else:
-        rolex.tick(130/60*2)#130 is the BPM of the song. BPM/60 makes BPM to beat per second, and I doubled it up to call these codes 2 times a beat.
-        continue
-    break
+    #now it's time to handle some events.
+    for event in pygame.event.get(): #get all of the events in the queue.
+        if event.type == QUIT: #if user tried to close the window?
+            exit() #kill the python. simple
+        elif event.type == KEYDOWN: #if user pressed the key?
+            if event.key == K_n: #if the key that user pressed is N?
+                print("n pressed") #first, print it in the console for debug purpose.
+                break #and, get outta here.
+    else: #if nothing broke:
+        rolex.tick_busy_loop(130/60*2)#130 is the BPM of the song. BPM/60 makes BPM to beat per second, and I doubled it up to call these codes 2 times a beat.
+        print(rolex.get_fps())
+        continue #let's keep this loop.
+    break #if something broke, it will break this loop too.
