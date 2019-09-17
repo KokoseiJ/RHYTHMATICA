@@ -69,6 +69,8 @@ def multilinerender(font, text, antialias = 1, color = (0, 0, 0), background = N
         prevyloc += x.get_height()
     return rtnsurf
 
+##TODO: Make another resizing method that depends on the height
+
 #####Parsing Scripts#####
 def get_info(file, songlength):
     """
