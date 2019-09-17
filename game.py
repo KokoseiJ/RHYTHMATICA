@@ -74,7 +74,8 @@ while True: # Let's repeat this until python breaks something.
                 print("n pressed") #first, print it in the console for debug purpose.
                 break #and, get outta here.
     else: #if nothing broke:
-        rolex.tick(130/60*2)#130 is the BPM of the song. BPM/60 makes BPM to beat per second, and I doubled it up to call these codes 2 times a beat.
+        #130 is the BPM of the song. BPM/60 makes BPM to beat per second, and I doubled it up to call these codes 2 times a beat.
+        rolex.tick(130/60*2)
         continue #let's keep this loop.
     break #if something broke, it will break this loop too.
 intromusic.stop() #stop the music.
@@ -91,6 +92,16 @@ if len(songlists) == 0: #if there is no song:
 elif songnumb >= songnumb_max: #if somehow songnumb is higher than the songnumb_max:
     print("wot m8 u deleted music while playing? impressive job") #it doesn't usally happen so... that really is impressing job
     songnumb = 0 #to prevent errors, we restore songnumb to 0
+#load song file, preview song file.
+song = pygame.mixer.Sound("note/"+songlists[songnumb]+"/song.wav")
+pre = pygame.mixer.Sound("note/"+songlists[songnumb]+"/pre.wav")
 #and get some infos from the info.txt file.
-songname, artist, bpm, notes, preview = get_info(open("note/" + songlists[songnumb]+"/info.txt"))
+infolist = get_info(open("note/"+songlists[songnumb]+"/info.txt"), song.get_length())
+print(infolist)
+if infolist[0] == 1:
+    print(infolist[2].__class__.__name__, ":", infolist[2])
+    exit()
+else:
+    songname, artist, bpm, notes, difficulty = infolist
+del(infolist)
 tmpsurf = pygame.Surface(screen.get_size()).convert()
