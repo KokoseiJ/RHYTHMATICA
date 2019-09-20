@@ -14,3 +14,34 @@ class intro_electron:
             self.isbig = True
             self.resizedimg = resize(self.img, self.size + 0.1)
         blit_center(screen, self.resizedimg, self.loc)
+class songpack:
+    def __init__(self, path):
+        """
+        0|Flamingo #name
+        1|Kero Kero Bonito #artist
+        2|89 #bpm
+        3|1489 #note
+        #difficulty: ~2 easy 3~5 medium 6~ hard
+        """
+        try:
+            self.path = path
+            self.image = pygame.image.load("note/" + path + "/img.png").convert()
+            self.music = pygame.mixer.Sound("note/" + path + "/song.wav")
+            self.pre = pygame.mixer.Sound("note/" + path + "/pre.wav")
+            self.notelist = open("note/" + path + "/not.txt").read().split("\n")
+            self.name, self.artist, bpm, notes = open("note/" + path + "/info.txt").read().split("\n")[0:4]
+            self.bpm = float(bpm)
+            notepersec = int(notes) / self.music.get_length()
+            if notepersec < 3:
+                self.difficulty = "EASY"
+            elif 3 <= notepersec < 6:
+                self.difficulty = "MEDIUM"
+            elif 6 <= notepersec < 10:
+                self.difficulty = "HARD"
+            elif 10 <= notepersec:
+                self.difficulty = "EXTREME"
+            self.errmsg = False
+        except Exception as e:
+            self.errmsg = (1, "0of, seems like your songpack is corrupted!", e)
+        finally:
+            return

@@ -92,6 +92,7 @@ if len(songlists) == 0: #if there is no song:
 elif songnumb >= songnumb_max: #if somehow songnumb is higher than the songnumb_max:
     print("wot m8 u deleted music while playing? impressive job") #it doesn't usally happen so... that really is impressing job
     songnumb = 0 #to prevent errors, we restore songnumb to 0
+"""
 #load song file, preview song file.
 song = pygame.mixer.Sound("note/"+songlists[songnumb]+"/song.wav")
 pre = pygame.mixer.Sound("note/"+songlists[songnumb]+"/pre.wav")
@@ -105,3 +106,13 @@ else:
     songname, artist, bpm, notes, difficulty = infolist
 del(infolist)
 tmpsurf = pygame.Surface(screen.get_size()).convert()
+"""
+songpacks = tuple(map(lambda x:  songpack(x), songlists)) #make a new list to store all the songpacks.
+for x in songpacks:
+    if x.errmsg:
+        print(x.errmsg[1])
+        print(str(x.errmsg[2].__class__.__name__)+":", x.errmsg[2])
+        print("path:", x.path)
+    else:
+        print(x.name, x.artist, x.bpm, x.difficulty)
+    print()

@@ -78,21 +78,7 @@ def get_info(file, songlength):
     3|1489 #note
     #difficulty: ~2 easy 3~5 medium 6~ hard
     """
-    try:
-        infolist = file.read().split("\n")
-        notepersec = int(infolist[3]) / songlength
-        if notepersec < 3:
-            difficulty = "EASY"
-        elif 3 <= notepersec < 6:
-            difficulty = "MEDIUM"
-        elif 6 <= notepersec < 10:
-            difficulty = "HARD"
-        elif 10 <= notepersec:
-            difficulty = "EXTREME"
-        return infolist[0], infolist[1], int(infolist[2]), int(infolist[3]), difficulty
-    #return value : name,    artist,           BPM,          note amount,   difficulty
-    except Exception as e:
-        return (1, "0of! looks like your notepack is written by a n00b!", e)
+    pass
 
 def get_note(file):
     """
