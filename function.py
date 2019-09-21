@@ -9,7 +9,7 @@ def fadeout_screen(clock, screen, image, duration = 1.5, fps = 60):
         screen.blit(tmpscreen, (0, 0)) #blit the backed up screen.
         image.set_alpha(opacity) #set the image's alpha to [opacity]
         screen.blit(image, (0, 0)) #blit the image.
-        opacity += 50 / (fps * duration) #increase opacity a bit.
+        opacity += 100 / (fps * duration) #increase opacity a bit.
         pygame.display.update() #flip!
         clock.tick(fps) #now wait for 1/60 secs. wait, is it sec or secs? dunno lol
     print("fadeout finished")
@@ -19,12 +19,12 @@ def fadein_screen(clock, screen, image, duration = 1.5, fps = 60):
     print("fadein started")
     tmpscreen = screen #back up the current screen, because we need to blit a low-opacity loading image to the screen for like 100 times.
     image = pygame.transform.scale(image, screen.get_size()) #resize the image as the size of the screen, so the image will fill the screen completely.
-    opacity = 50 #set opacity to 255
+    opacity = 100 #set opacity to 255
     for x in range(int(fps * duration)): #so this code will be executed [fps] times per seconds, and you want it to be run for [duration] seconds. so you multiply it. easy work.
         screen.blit(tmpscreen, (0, 0)) #blit the backed up screen.
         image.set_alpha(opacity) #set the image's alpha to [opacity]
         screen.blit(image, (0, 0)) #blit the image.
-        opacity -= 50 / (fps * duration) #decrease opacity a bit.
+        opacity -= 100 / (fps * duration) #decrease opacity a bit.
         pygame.display.update() #flip!
         clock.tick(fps) #now wait for 1/60 secs. wait, is it sec or secs? dunno lol
     print("fadein finished")
@@ -56,32 +56,40 @@ def get_resizedsize(surf, size): #put surface's size and desired size. default s
 def resize(surf, size): #put surface and desired size. default size is 1. 2 will double up the size.
     return pygame.transform.scale(surf, tuple(map(lambda x: int(x*size), surf.get_size())))
 
+##TODO: Make another resizing method that depends on the height - done uwu
+def resize_height(surf, desheight):
+    #height:width = desheight:x
+    #desheight * width / height = x
+    height = surf.get_height()
+    width = surf.get_width()
+    return pygame.transform.scale(surf, (int(desheight * width / height), int(desheight)))
+
 def multilinerender(font, text, antialias = 1, color = (0, 0, 0), background = None):
     renderedlist = []
     for x in text.split("\n"):
         renderedlist.append(font.render(x, antialias, color, background))
-    width = max(tuple(map(lambda x:  x.get_width(), renderedlist)))
-    height = sum(tuple(map(lambda x:  x.get_height(), renderedlist)))
+    return combinesurfs(renderedlist)
+
+def combinesurfs(surf):
+    width = max(tuple(map(lambda x:  x.get_width(), surf)))
+    height = sum(tuple(map(lambda x:  x.get_height(), surf)))
     rtnsurf = pygame.Surface((width, height), pygame.SRCALPHA).convert_alpha()
     prevyloc = 0
-    for x in renderedlist:
+    for x in surf:
         rtnsurf.blit(x,((width / 2) - (x.get_width() / 2), prevyloc))
         prevyloc += x.get_height()
     return rtnsurf
 
-##TODO: Make another resizing method that depends on the height
-
 #####Parsing Scripts#####
+"""
 def get_info(file, songlength):
-    """
-    0|Flamingo #name
-    1|Kero Kero Bonito #artist
-    2|89 #bpm
-    3|1489 #note
+    #0|Flamingo #name
+    #1|Kero Kero Bonito #artist
+    #2|89 #bpm
+    #3|1489 #note
     #difficulty: ~2 easy 3~5 medium 6~ hard
-    """
     pass
-
+"""
 def get_note(file):
     """
     1|ver:A3

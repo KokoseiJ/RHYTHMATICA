@@ -116,3 +116,6 @@ for x in songpacks:
     else:
         print(x.name, x.artist, x.bpm, x.difficulty)
     print()
+screen = songpacks[songnumb].get_surf(screen.get_size())
+pygame.display.flip()
+pygame.time.wait(5000)

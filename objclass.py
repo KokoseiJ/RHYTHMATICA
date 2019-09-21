@@ -28,7 +28,7 @@ class songpack:
             self.image = pygame.image.load("note/" + path + "/img.png").convert()
             self.music = pygame.mixer.Sound("note/" + path + "/song.wav")
             self.pre = pygame.mixer.Sound("note/" + path + "/pre.wav")
-            self.notelist = open("note/" + path + "/not.txt").read().split("\n")
+            self.notelist = open("note/" + path + "/note.txt").read().split("\n")
             self.name, self.artist, bpm, notes = open("note/" + path + "/info.txt").read().split("\n")[0:4]
             self.bpm = float(bpm)
             notepersec = int(notes) / self.music.get_length()
@@ -45,3 +45,11 @@ class songpack:
             self.errmsg = (1, "0of, seems like your songpack is corrupted!", e)
         finally:
             return
+    def get_surf(self, size):
+        rtnsurf = pygame.Surface(size).convert()
+        bg = pygame.transform.scale(self.image, size)
+        bg.set_alpha(100)
+        rtnsurf.blit(bg, (0, 0))
+        preview = resize_height(self.image, rtnsurf.get_height() / 2)
+        blit_center(rtnsurf, preview, (0.5, 0), (0.5, 0))
+        return rtnsurf
