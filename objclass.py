@@ -45,11 +45,17 @@ class songpack:
             self.errmsg = (1, "0of, seems like your songpack is corrupted!", e)
         finally:
             return
-    def get_surf(self, size):
+    def get_surf(self, size, font):
         rtnsurf = pygame.Surface(size).convert()
+        white = pygame.Surface(size).convert()
+        white.fill((255, 255, 255))
         bg = pygame.transform.scale(self.image, size)
         bg.set_alpha(100)
-        rtnsurf.blit(bg, (0, 0))
         preview = resize_height(self.image, rtnsurf.get_height() / 2)
+        txt = multilinerender(font, self.name+"\nArtist:"+self.artist+"\nBPM:"+str(self.bpm)+"\nDifficulty:"+self.difficulty)
+        txt = resize_height(txt, rtnsurf.get_height() / 3)
+        rtnsurf.blit(white, (0, 0))
+        rtnsurf.blit(bg, (0, 0))
         blit_center(rtnsurf, preview, (0.5, 0), (0.5, 0))
+        blit_center(rtnsurf, txt, (0.5, 0.5), (0.5, 0))
         return rtnsurf

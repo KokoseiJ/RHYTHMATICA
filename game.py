@@ -39,6 +39,7 @@ loadimg = pygame.image.load("res/image/ingame/loading_wide.png").convert()
 
 #load font, render a text kindly. uhh, maybe not that kind... nevermind.
 notoblack = pygame.font.Font("res/fonts/NotoSans-Black.ttf", 50)
+noto = pygame.font.Font("res/fonts/NotoSans-Regular.ttf", 50)
 pressntostart = notoblack.render("Press N to start", 1, (0, 0, 0)).convert_alpha()
 
 #load my cool intro uwu
@@ -80,7 +81,7 @@ while True: # Let's repeat this until python breaks something.
     break #if something broke, it will break this loop too.
 intromusic.stop() #stop the music.
 startsound.play() #and start the start-effect sound.
-fadeout_screen(rolex, screen, loadimg) #call the fadeout thing
+fadein_screen(rolex, screen, loadimg) #call the fadeout thing
 
 
 #####Selection Codes starts from here!#####
@@ -116,6 +117,6 @@ for x in songpacks:
     else:
         print(x.name, x.artist, x.bpm, x.difficulty)
     print()
-screen = songpacks[songnumb].get_surf(screen.get_size())
-pygame.display.flip()
+screen.blit(songpacks[songnumb].get_surf(screen.get_size(), noto), (0, 0))
+fadein_screen(rolex, screen, loadimg)
 pygame.time.wait(5000)
