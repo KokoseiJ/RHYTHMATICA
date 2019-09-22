@@ -30,7 +30,7 @@ class intro_electron:
             self.resizedimg = resize(self.img, self.size + 0.1)
         blit_center(screen, self.resizedimg, self.loc)
 class songpack:
-    def __init__(self, path):
+    def __init__(self, path, fonts):
         """
         0|Flamingo #name
         1|Kero Kero Bonito #artist
@@ -44,8 +44,14 @@ class songpack:
             self.music = pygame.mixer.Sound("note/" + path + "/song.wav")
             self.pre = pygame.mixer.Sound("note/" + path + "/pre.wav")
             self.notelist = open("note/" + path + "/note.txt").read().split("\n")
+            self.font = fonts
             self.name, self.artist, bpm, notes = open("note/" + path + "/info.txt").read().split("\n")[0:4]
-            self.bpm = float(bpm)
+            if '.' in bpm:
+                self.bpm = float(bpm)
+            else:
+                self.bpm = int(bpm)
+            self.blit_size = 0
+            self.blit_xloc = 0
             notepersec = int(notes) / self.music.get_length()
             if notepersec < 3:
                 self.difficulty = "EASY"
@@ -60,16 +66,16 @@ class songpack:
             self.errmsg = (1, "0of, seems like your songpack is corrupted!", e)
         finally:
             return
-    def get_surf(self, size, fonts):
+    def get_surf(self, size):
         rtnsurf = pygame.Surface(size).convert()
         white = pygame.Surface(size).convert()
         white.fill((255, 255, 255))
         bg = pygame.transform.scale(self.image, size)
         bg.set_alpha(100)
         preview = resize_height(self.image, rtnsurf.get_height() / 2)
-        txt = multilinerender(fonts['regular'], self.name+"\nArtist:"+self.artist+"\nBPM:"+str(self.bpm)+"\nDifficulty:"+self.difficulty, 5)
+        txt = multilinerender(self.font['regular'], self.name+"\nArtist:"+self.artist+"\nBPM:"+str(self.bpm)+"\nDifficulty:"+self.difficulty, 5)
         txt = resize_height(txt, rtnsurf.get_height() / 3)
-        guide = multilinerender(fonts['black'], "Press T, Y to change the speed\nPress G, H to change the song.\nPress N to start the game.", 5)
+        guide = multilinerender(self.font['black'], "Press T, Y to change the speed.\nPress G, H to change the song.\nPress N to start the game.", 5)
         guide = resize_height(guide, rtnsurf.get_height() / 6)
         rtnsurf.blit(white, (0, 0))
         rtnsurf.blit(bg, (0, 0))
@@ -77,3 +83,21 @@ class songpack:
         blit_center(rtnsurf, txt, (0.5, 0.5), (0.5, 0))
         blit_center(rtnsurf, guide, (0.5, 1), (0.5, 1))
         return rtnsurf
+    def move_left(self, screen, mode, times): #0: main 1: slave
+        resizedimg = resize(resize_height(self.image, screen.get_height() / 2), self.blit_size)
+        blit_center(screen, resizedimg, (self.blit_xloc, 0.25))
+        self.blit_xloc -= 0.5 / times
+        if mode == 0:
+            self.blit_size -= 1 / times
+        if mode == 1:
+            self.blit_size += 1 / times
+        return
+    def move_right(self, screen, mode, times): #0: main 1: slave
+        resizedimg = resize(resize_height(self.image, screen.get_height() / 2), self.blit_size)
+        blit_center(screen, resizedimg, (self.blit_xloc, 0.25))
+        self.blit_xloc += 0.5 / times
+        if mode == 0:
+            self.blit_size -= 1 / times
+        if mode == 1:
+            self.blit_size += 1 / times
+        return

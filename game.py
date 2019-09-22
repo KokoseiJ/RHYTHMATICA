@@ -64,6 +64,7 @@ intromusic = pygame.mixer.Sound("res/audio/effect/Rhythmatica.wav")
 #load the start effect sound.
 startsound = pygame.mixer.Sound("res/audio/effect/start.wav")
 
+changeeffect = pygame.mixer.Sound("res/audio/effect/nextsong.wav")
 
 #####aaand, finally we draw all these shit to the screen! yay!#####
 #at the start, we play the song.
@@ -102,7 +103,18 @@ fadeout_screen(rolex, screen, screen, loadimg) #call the fadeout thing
 
 #####Selection Codes starts from here!#####
 songlists = os.listdir("note") #load the songs.
-songnumb_max = len(songlists) #get the number of songs available.
+songpacks = []
+for x in songlists:
+    song = songpack(x, noto)
+    if song.errmsg:
+        print(song.errmsg[1])
+        print(str(song.errmsg[2].__class__.__name__)+":", song.errmsg[2])
+        print("path:", song.path)
+    else:
+        print(song.name, song.artist, song.bpm, song.difficulty)
+        songpacks.append(song)
+    print()
+songnumb_max = len(songpacks) #get the number of songs available.
 if len(songlists) == 0: #if there is no song:
     print("pfffft u didnt even put songs n00b gtfo") #lul, get rekt
     exit() #and exit the game.
@@ -124,16 +136,7 @@ else:
 del(infolist)
 tmpsurf = pygame.Surface(screen.get_size()).convert()
 """
-songpacks = tuple(map(lambda x:  songpack(x), songlists)) #make a new list to store all the songpacks.
-for x in songpacks:
-    if x.errmsg:
-        print(x.errmsg[1])
-        print(str(x.errmsg[2].__class__.__name__)+":", x.errmsg[2])
-        print("path:", x.path)
-    else:
-        print(x.name, x.artist, x.bpm, x.difficulty)
-    print()
-tmpscreen = songpacks[songnumb].get_surf(screen.get_size(), noto)
+tmpscreen = songpacks[songnumb].get_surf(screen.get_size())
 fadein_screen(rolex, screen, tmpscreen, loadimg)
 songpacks[songnumb].pre.play()
 pygame.event.clear()
@@ -146,7 +149,31 @@ while True:
                 print("n pressed") #first, print it in the console for debug purpose.
                 break
             elif event.key == K_g:
-                pass
+                songpacks[songnumb].pre.stop()
+                changeeffect.play()
+                prevsongnumb = songnumb
+                if songnumb == 0:
+                    songnumb = songnumb_max - 1
+                else:
+                    songnumb -= 1
+                move_right(rolex, screen, background, songpacks[prevsongnumb], songpacks[songnumb])
+                screen.blit(songpacks[songnumb].get_surf(screen.get_size()), (0, 0))
+                pygame.display.update()
+                pygame.time.wait(100)
+                songpacks[songnumb].pre.play()
+            elif event.key == K_h:
+                songpacks[songnumb].pre.stop()
+                changeeffect.play()
+                prevsongnumb = songnumb
+                if songnumb == songnumb_max - 1:
+                    songnumb = 0
+                else:
+                    songnumb += 1
+                move_left(rolex, screen, background, songpacks[prevsongnumb], songpacks[songnumb])
+                screen.blit(songpacks[songnumb].get_surf(screen.get_size()), (0, 0))
+                pygame.display.update()
+                pygame.time.wait(100)
+                songpacks[songnumb].pre.play()
     else:
         continue
     break

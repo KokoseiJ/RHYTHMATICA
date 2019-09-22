@@ -44,11 +44,37 @@ def fadein_screen(clock, screen, tmpscreen, image, duration = 1.5, fps = 60):
     print("fadein finished")
     return
 
+def move_left(clock, screen, bg, cur, _next, fps = 60, duration = 2):
+    cur.blit_xloc = 0.5
+    cur.blit_size = 1
+    _next.blit_xloc = 1
+    _next.blit_size = 0
+    for x in range(int(fps * duration)):
+        screen.blit(bg, (0, 0))
+        cur.move_left(screen, 0, fps*duration)
+        _next.move_left(screen, 1, fps*duration)
+        pygame.display.update()
+        clock.tick(fps)
+    return
+
+def move_right(clock, screen, bg, cur, _next, fps = 60, duration = 2):
+    cur.blit_xloc = 0.5
+    cur.blit_size = 1
+    _next.blit_xloc = 0
+    _next.blit_size = 0
+    for x in range(int(fps * duration)):
+        screen.blit(bg, (0, 0))
+        cur.move_right(screen, 0, fps*duration)
+        _next.move_right(screen, 1, fps*duration)
+        pygame.display.update()
+        clock.tick(fps)
+    return
+
 
 #####Custom Transforms#####
 #commented codes are left for reference.
-#Previously, these functinos are returning the locations or sizes so you still have to call another functions.
-#but that makes code longer, so I refined it to do all the required things in these functions.
+#Previously, these functinos are returning the locations or sizes so you still have to call another functions such as pygame.transform.scale() or blit()
+#but that makes the code longer, so I refined it to get all the things done in one function.
 #for TL:DR - I changed it because it sucks. done.
 """
 def get_center(screen, surf, loc = (0.5, 0.5), anchor = (0.5, 0.5)): #put screen's sizes and surface's sizes, desired location and anchor(both between 0 and 1)
