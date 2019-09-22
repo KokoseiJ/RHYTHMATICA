@@ -1,3 +1,18 @@
+#RHYTHMATICA is a simple rhythm game, desinged by Kokosei J a.k.a Wonjun Jung.
+#Copyright (C) 2019, Wonjun Jung
+
+#This program is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#(at your option) any later version.
+
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+
+#You should have received a copy of the GNU General Public License
+#along with this program.  If not, see <https://www.gnu.org/licenses/>.
 from function import *
 from objclass import *
 import pygame
@@ -38,9 +53,10 @@ logo = resize(logo, 0.3)
 loadimg = pygame.image.load("res/image/ingame/loading_wide.png").convert()
 
 #load font, render a text kindly. uhh, maybe not that kind... nevermind.
-notoblack = pygame.font.Font("res/fonts/NotoSans-Black.ttf", 50)
-noto = pygame.font.Font("res/fonts/NotoSans-Regular.ttf", 50)
-pressntostart = notoblack.render("Press N to start", 1, (0, 0, 0)).convert_alpha()
+noto = {}
+noto['black'] = pygame.font.Font("res/fonts/NotoSans-Black.ttf", 50)
+noto['regular'] = pygame.font.Font("res/fonts/NotoSans-Regular.ttf", 50)
+pressntostart = noto['black'].render("Press N to start", 1, (0, 0, 0)).convert_alpha()
 
 #load my cool intro uwu
 intromusic = pygame.mixer.Sound("res/audio/effect/Rhythmatica.wav")
@@ -81,7 +97,7 @@ while True: # Let's repeat this until python breaks something.
     break #if something broke, it will break this loop too.
 intromusic.stop() #stop the music.
 startsound.play() #and start the start-effect sound.
-fadein_screen(rolex, screen, loadimg) #call the fadeout thing
+fadeout_screen(rolex, screen, screen, loadimg) #call the fadeout thing
 
 
 #####Selection Codes starts from here!#####
@@ -117,6 +133,20 @@ for x in songpacks:
     else:
         print(x.name, x.artist, x.bpm, x.difficulty)
     print()
-screen.blit(songpacks[songnumb].get_surf(screen.get_size(), noto), (0, 0))
-fadein_screen(rolex, screen, loadimg)
-pygame.time.wait(5000)
+tmpscreen = songpacks[songnumb].get_surf(screen.get_size(), noto)
+fadein_screen(rolex, screen, tmpscreen, loadimg)
+songpacks[songnumb].pre.play()
+pygame.event.clear()
+while True:
+    for event in pygame.event.get(): #get all of the events in the queue.
+        if event.type == QUIT: #if user tried to close the window?
+            exit() #kill the python. simple
+        elif event.type == KEYDOWN: #if user pressed the key?
+            if event.key == K_n: #if the key that user pressed is N?
+                print("n pressed") #first, print it in the console for debug purpose.
+                break
+            elif event.key == K_g:
+                pass
+    else:
+        continue
+    break

@@ -1,3 +1,18 @@
+#This code contains classes that can be used in RHYTHMATICA.
+#Copyright (C) 2019, Wonjun Jung
+
+#This program is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#(at your option) any later version.
+
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+
+#You should have received a copy of the GNU General Public License
+#along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import pygame
 from function import *
 class intro_electron:
@@ -35,7 +50,7 @@ class songpack:
             if notepersec < 3:
                 self.difficulty = "EASY"
             elif 3 <= notepersec < 6:
-                self.difficulty = "MEDIUM"
+                 self.difficulty = "MEDIUM"
             elif 6 <= notepersec < 10:
                 self.difficulty = "HARD"
             elif 10 <= notepersec:
@@ -45,17 +60,20 @@ class songpack:
             self.errmsg = (1, "0of, seems like your songpack is corrupted!", e)
         finally:
             return
-    def get_surf(self, size, font):
+    def get_surf(self, size, fonts):
         rtnsurf = pygame.Surface(size).convert()
         white = pygame.Surface(size).convert()
         white.fill((255, 255, 255))
         bg = pygame.transform.scale(self.image, size)
         bg.set_alpha(100)
         preview = resize_height(self.image, rtnsurf.get_height() / 2)
-        txt = multilinerender(font, self.name+"\nArtist:"+self.artist+"\nBPM:"+str(self.bpm)+"\nDifficulty:"+self.difficulty)
+        txt = multilinerender(fonts['regular'], self.name+"\nArtist:"+self.artist+"\nBPM:"+str(self.bpm)+"\nDifficulty:"+self.difficulty, 5)
         txt = resize_height(txt, rtnsurf.get_height() / 3)
+        guide = multilinerender(fonts['black'], "Press T, Y to change the speed\nPress G, H to change the song.\nPress N to start the game.", 5)
+        guide = resize_height(guide, rtnsurf.get_height() / 6)
         rtnsurf.blit(white, (0, 0))
         rtnsurf.blit(bg, (0, 0))
         blit_center(rtnsurf, preview, (0.5, 0), (0.5, 0))
         blit_center(rtnsurf, txt, (0.5, 0.5), (0.5, 0))
+        blit_center(rtnsurf, guide, (0.5, 1), (0.5, 1))
         return rtnsurf

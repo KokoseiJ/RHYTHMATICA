@@ -1,30 +1,44 @@
+#This code contains additional functions that can be used with Pygame, desinged for RHYTHMATICA.
+#Copyright (C) 2019, Wonjun Jung
+
+#This program is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#(at your option) any later version.
+
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+
+#You should have received a copy of the GNU General Public License
+#along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 import pygame
 #####Screen Effects#####
-def fadeout_screen(clock, screen, image, duration = 1.5, fps = 60):
+def fadeout_screen(clock, screen, tmpscreen, image, duration = 1.5, fps = 60):
     print("fadeout started")
-    tmpscreen = screen #back up the current screen, because we need to blit a low-opacity loading image to the screen for like 100 times.
     image = pygame.transform.scale(image, screen.get_size()) #resize the image as the size of the screen, so the image will fill the screen completely.
     opacity = 0 #set opacity to 0
     for x in range(int(fps * duration)): #so this code will be executed [fps] times per seconds, and you want it to be run for [duration] seconds. so you multiply it. easy work.
         screen.blit(tmpscreen, (0, 0)) #blit the backed up screen.
         image.set_alpha(opacity) #set the image's alpha to [opacity]
         screen.blit(image, (0, 0)) #blit the image.
-        opacity += 100 / (fps * duration) #increase opacity a bit.
+        opacity += (50 / (fps * duration)) #increase opacity a bit.
         pygame.display.update() #flip!
         clock.tick(fps) #now wait for 1/60 secs. wait, is it sec or secs? dunno lol
     print("fadeout finished")
     return
 
-def fadein_screen(clock, screen, image, duration = 1.5, fps = 60):
+def fadein_screen(clock, screen, tmpscreen, image, duration = 1.5, fps = 60):
     print("fadein started")
-    tmpscreen = screen #back up the current screen, because we need to blit a low-opacity loading image to the screen for like 100 times.
     image = pygame.transform.scale(image, screen.get_size()) #resize the image as the size of the screen, so the image will fill the screen completely.
-    opacity = 100 #set opacity to 0
+    opacity = 255 #set opacity to 0
     for x in range(int(fps * duration)): #so this code will be executed [fps] times per seconds, and you want it to be run for [duration] seconds. so you multiply it. easy work.
         screen.blit(tmpscreen, (0, 0)) #blit the backed up screen.
         image.set_alpha(opacity) #set the image's alpha to [opacity]
         screen.blit(image, (0, 0)) #blit the image.
-        opacity -= 100 / (fps * duration) #increase opacity a bit.
+        opacity -= (255 / (fps * duration)) #increase opacity a bit.
         pygame.display.update() #flip!
         clock.tick(fps) #now wait for 1/60 secs. wait, is it sec or secs? dunno lol
     print("fadein finished")
