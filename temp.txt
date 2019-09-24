@@ -1,0 +1,21 @@
+#fuck it. I am studying science right now BUT I AM NOT INTERESTED AT MY FUCKING BODY
+class note:
+    def __init__(self, numb):
+        #comments are for reference
+        #loc = ((-100, 100, -100, 100, -100, 100), (100, 100, 0, 0, -100, -100))
+        #self.loc = (loc[0][numb], loc[1][numb])
+        #self.color = dunno, do something works proprely
+        self.image = resize(image, 0.7?)
+	self.spawn_size = 2
+        self.des_size = 1
+        self.size = 2
+        return
+    def blit(self, screen, time):
+        blit_center(screen, self.image, self.loc)
+        if self.size <= self.des_size:
+            return 1
+        self.size -= (self.spawn_size - self.des_size) / time
+        return
+#not sure if it works, but I hope it's usable code. some debugging and modification will make it work flawlessly.
+#I will remove this file when I add this class to the main code completely. before that, I should remain this as a reference.
+#btw, who is WEDNESDAY CAMPANELLA? I kinda enjoying her song, but have no idea who is her
