@@ -15,7 +15,11 @@
 #along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import pygame
+
+########################
 #####Screen Effects#####
+########################
+
 def fadeout_screen(clock, screen, tmpscreen, image, duration = 1.5, fps = 60):
     print("fadeout started")
     image = pygame.transform.scale(image, screen.get_size()) #resize the image as the size of the screen, so the image will fill the screen completely.
@@ -70,8 +74,10 @@ def move_right(clock, screen, bg, cur, _next, fps = 60, duration = 2):
         clock.tick(fps)
     return
 
-
+###########################
 #####Custom Transforms#####
+###########################
+
 #commented codes are left for reference.
 #Previously, these functinos are returning the locations or sizes so you still have to call another functions such as pygame.transform.scale() or blit()
 #but that makes the code longer, so I refined it to get all the things done in one function.
@@ -96,6 +102,19 @@ def get_resizedsize(surf, size): #put surface's size and desired size. default s
 def resize(surf, size): #put surface and desired size. default size is 1. 2 will double up the size.
     return pygame.transform.scale(surf, tuple(map(lambda x: int(x*size), surf.get_size())))
 
+def resize_onload(screen, surf, size = 1):
+    scrx = screen.get_width()
+    scry = screen.get_height()
+    imgx = surf.get_width()
+    imgy = surf.get_height()
+    if imgx > imgy:
+        width = scrx
+        height = imgy * scrx / imgx
+    else:
+        width = imgx * scry / imgy
+        height = scry
+    return pygame.transform.scale(surf, tuple(map(lambda x: int(x*size), (width, height))))
+
 ##TODO: Make another resizing method that depends on the height - done uwu
 def resize_height(surf, desheight):
     #height:width = desheight:x
@@ -103,6 +122,13 @@ def resize_height(surf, desheight):
     height = surf.get_height()
     width = surf.get_width()
     return pygame.transform.scale(surf, (int(desheight * width / height), int(desheight)))
+
+def resize_width(surf, deswidth):
+    #height:width = x:deswidth
+    #height * deswidth / width = x
+    height = surf.get_height()
+    width = surf.get_width()
+    return pygame.transform.scale(surf, (int(deswidth), int(height * deswidth / width)))
 
 def multilinerender(font, text, antialias = 1, color = (0, 0, 0), background = None):
     renderedlist = []
@@ -120,7 +146,10 @@ def combinesurfs(surf):
         prevyloc += x.get_height()
     return rtnsurf
 
+#########################
 #####Parsing Scripts#####
+#########################
+
 """
 def get_info(file, songlength):
     #0|Flamingo #name
@@ -130,7 +159,7 @@ def get_info(file, songlength):
     #difficulty: ~2 easy 3~5 medium 6~ hard
     pass
 """
-def get_note(file):
+def get_note(notelist):
     """
     1|ver:A3
     2|/
@@ -147,7 +176,6 @@ def get_note(file):
     7|/4
     """
     try:
-        notelist =  file.read().split("\n")
         rtnlist = [[], [], [], [], [], []]
         ver = notelist[0][4:]
         if ver == "A3":
@@ -176,4 +204,10 @@ def get_note(file):
                     time += (60 / bpm) / div
         return rtnlist
     except Exception as e:
-        return (1, "Yeouch! There is a wild exception in the note file!\nError Message: "+e)
+        return (1, "Yeouch! There is a wild exception in the note file!\nError Message: " + str(e))
+
+##############
+#####Misc#####
+##############
+def get_times(starttime, curtime):
+    return curtime - starttime

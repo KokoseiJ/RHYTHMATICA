@@ -56,7 +56,7 @@ loadimg = pygame.image.load("res/image/ingame/loading_wide.png").convert()
 noto = {}
 noto['black'] = pygame.font.Font("res/fonts/NotoSans-Black.ttf", 50)
 noto['regular'] = pygame.font.Font("res/fonts/NotoSans-Regular.ttf", 50)
-pressntostart = noto['black'].render("Press N to start", 1, (0, 0, 0)).convert_alpha()
+pressntostart = noto['black'].render("Press N to start", 10, (0, 0, 0)).convert_alpha()
 
 #load my cool intro uwu
 intromusic = pygame.mixer.Sound("res/audio/effect/Rhythmatica.wav")
