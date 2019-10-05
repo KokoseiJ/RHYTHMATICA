@@ -21,14 +21,16 @@ class intro_electron:
         self.loc = (loc_x, loc_y)
         self.size = size
         self.isbig = False
+        return
     def blit(self, screen):
         if self.isbig:
             self.isbig = False
             self.resizedimg = resize(self.img, self.size)
         else:
             self.isbig = True
-            self.resizedimg = resize(self.img, self.size + 0.1)
+            self.resizedimg = resize(self.img, self.size + 0.05)
         blit_center(screen, self.resizedimg, self.loc)
+        return
 class songpack:
     def __init__(self, path, fonts):
         """
@@ -101,3 +103,28 @@ class songpack:
         if mode == 1:
             self.blit_size += 1 / times
         return
+class note:
+    def __init__(self, numb, img):
+        self.img = img
+        if numb % 2:
+            self.xloc = 0.65
+        else:
+            self.xloc = 0.35
+        if numb < 2:
+            self.yloc = 0.2
+        elif numb < 4:
+            self.yloc = 0.5
+        else:
+            self.yloc = 0.8
+        self.orig_size = 2.5
+        self.size = self.orig_size
+        self.des_size = 1
+        return
+    def blit(self, screen, fps, duration):
+        img = resize(self.img, self.size)
+        blit_center(screen, img, (self.xloc, self.yloc))
+        if self.size <= self.des_size:
+            return 1
+        else:
+            self.size -= (self.orig_size - self.des_size) / (fps * duration)
+        return 0

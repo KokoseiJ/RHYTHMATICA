@@ -49,28 +49,34 @@ def fadein_screen(clock, screen, tmpscreen, image, duration = 1.5, fps = 60):
     return
 
 def move_left(clock, screen, bg, cur, _next, fps = 60, duration = 2):
-    cur.blit_xloc = 0.5
-    cur.blit_size = 1
-    _next.blit_xloc = 1
-    _next.blit_size = 0
+    cur.blit_xloc = 0.5 #set the current instance's location.
+    cur.blit_size = 1 #set the current instance's size.
+    _next.blit_xloc = 1 #set the next instance's location.
+    _next.blit_size = 0 #set the next instance's size.
+    #repeat at specified FPS, duration second:
     for x in range(int(fps * duration)):
-        screen.blit(bg, (0, 0))
-        cur.move_left(screen, 0, fps*duration)
+        screen.blit(bg, (0, 0)) #blit the background.
+        #call the move_left method.
+        cur.move_left(screen, 0, fps*duration) 
         _next.move_left(screen, 1, fps*duration)
-        pygame.display.update()
+        #whoop! flip!
+        pygame.display.flip()
         clock.tick(fps)
     return
 
 def move_right(clock, screen, bg, cur, _next, fps = 60, duration = 2):
-    cur.blit_xloc = 0.5
-    cur.blit_size = 1
-    _next.blit_xloc = 0
-    _next.blit_size = 0
+    cur.blit_xloc = 0.5 #set the current instance's location.
+    cur.blit_size = 1 #set the current instance's size.
+    _next.blit_xloc = 0 #set the next instance's location.
+    _next.blit_size = 0 #set the next instance's size.
+    #repeat at specified FPS, duration second:
     for x in range(int(fps * duration)):
-        screen.blit(bg, (0, 0))
+        screen.blit(bg, (0, 0)) #blit the background.
+        #call the move_right method.
         cur.move_right(screen, 0, fps*duration)
         _next.move_right(screen, 1, fps*duration)
-        pygame.display.update()
+        #whoop! flip!
+        pygame.display.flip()
         clock.tick(fps)
     return
 
@@ -87,10 +93,12 @@ def get_center(screen, surf, loc = (0.5, 0.5), anchor = (0.5, 0.5)): #put screen
     return ((screen[0] * loc[0]) - (surf[0] * anchor[0]), (screen[1] * loc[1]) - (surf[1] * anchor[1])) #returns calculated answer. ez but kinda complicated to do with lambda
 """
 
-def blit_center(screen, surf, location = (0.5, 0.5), anchorloc = (0.5, 0.5)):
-    refinedloc = []
+def blit_center(screen, surf, location = (0.5, 0.5), anchorloc = (0.5, 0.5)): #This function allows you to blit the image at relative location, based on relative anchor point.
+    refinedloc = [] #This list will contain the modified location.
     for scrsize, surfsize, loc, anchor in zip(screen.get_size(), surf.get_size(), location, anchorloc):
+        #It multiplies location argument to the screen size. and it multiplies anchor argument to surface size. and subtract it from the first result.
         refinedloc.append((scrsize * loc) - (surfsize * anchor))
+    #and, blit it! done.
     screen.blit(surf, refinedloc)
     return
 
@@ -102,15 +110,23 @@ def get_resizedsize(surf, size): #put surface's size and desired size. default s
 def resize(surf, size): #put surface and desired size. default size is 1. 2 will double up the size.
     return pygame.transform.scale(surf, tuple(map(lambda x: int(x*size), surf.get_size())))
 
-def resize_onload(screen, surf, size = 1):
+#This will resize the image's size to the max, so as a result you can set your image's size relatively.
+#Which will remove the dependency of fixed window size, and make the program more adaptive.
+def resize_onload(screen, surf, size = 1): 
+    #set the variables.
     scrx = screen.get_width()
     scry = screen.get_height()
     imgx = surf.get_width()
     imgy = surf.get_height()
+    #if image's width is bigger than it's height:
     if imgx > imgy:
+        #imgx : imgy = scrx : height
+        #imgy * scrx / imgx = height
         width = scrx
         height = imgy * scrx / imgx
     else:
+        #imgx : imgy = width : scry
+        #imgx * scry / imgy = width
         width = imgx * scry / imgy
         height = scry
     return pygame.transform.scale(surf, tuple(map(lambda x: int(x*size), (width, height))))
@@ -175,7 +191,8 @@ def get_note(notelist):
     6|6
     7|/4
     """
-    try:
+    #try:
+    if True:
         rtnlist = [[], [], [], [], [], []]
         ver = notelist[0][4:]
         if ver == "A3":
@@ -184,30 +201,37 @@ def get_note(notelist):
                 if x == "/":
                     tmp += 1
                 else:
-                    rtnlist[tmp].append(x)
+                    rtnlist[tmp].append(float(x))
         elif ver == "A4":
             bpm = 0
             div = 0
             time = 0
             for x in notelist[1:]:
-                if x[0] == "b":
-                    bpm = int(x[1:])
+                print(x)
+                if not x:
+                    continue
+                elif x[0] == "b":
+                    bpm = float(x[1:])
                 elif x[0] == "d":
-                    div = int(x[1:])
+                    div = float(x[1:])
                 elif x[0] == "w":
-                    time = int(x[1:])
+                    time = float(x[1:])
                 elif x[0] == "/":
-                    time += ((60 / bpm) / div) * int(x[1:])
+                    time += ((60 / bpm) / div) * float(x[1:])
                 else:
                     for y in x:
-                        rtnlist[int(y)].append(time)
+                        rtnlist[int(y)-1].append(time)
                     time += (60 / bpm) / div
         return rtnlist
-    except Exception as e:
-        return (1, "Yeouch! There is a wild exception in the note file!\nError Message: " + str(e))
+    #except Exception as e:
+    #    return (1, "Yeouch! There is a wild exception in the note file!\nError Message: " + str(e))
 
 ##############
 #####Misc#####
 ##############
 def get_times(starttime, curtime):
-    return curtime - starttime
+    return (curtime - starttime)
+
+def breakpoint():
+    global breaknumb
+    print("b", breaknumb)
