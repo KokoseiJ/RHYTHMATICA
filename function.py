@@ -229,9 +229,15 @@ def get_note(notelist):
 ##############
 #####Misc#####
 ##############
-def get_times(starttime, curtime):
-    return (curtime - starttime)
+def get_times(starttime):
+    return (pygame.time.get_ticks() - starttime)
 
-def breakpoint():
-    global breaknumb
-    print("b", breaknumb)
+def judge(starttime, judgetime, duration): #1 - HIT 0 - miss
+    curtime = get_times(starttime)
+    judgetime = (judgetime - duration) * 1000
+    if judgetime - 0.6 < curtime:
+        if judgetime - 0.5 < curtime and curtime < 0.2:
+            return 1
+        else:
+            return 2
+    return False
