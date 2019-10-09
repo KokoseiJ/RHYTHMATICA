@@ -104,27 +104,32 @@ class songpack:
             self.blit_size += 1 / times
         return
 class note:
-    def __init__(self, numb, img):
+    def __init__(self, keynumb, judgenumb, img):
+        self.keynumb = keynumb
         self.img = img
-        if numb % 2:
+        self.judgenumb = judgenumb
+        if keynumb % 2:
             self.xloc = 0.65
         else:
             self.xloc = 0.35
-        if numb < 2:
+        if keynumb < 2:
             self.yloc = 0.2
-        elif numb < 4:
+        elif keynumb < 4:
             self.yloc = 0.5
         else:
             self.yloc = 0.8
         self.orig_size = 2.5
         self.size = self.orig_size
         self.des_size = 1
+        self.delete = False
         return
-    def blit(self, screen, fps, duration):
+    def blit(self, screen, curjudge, fps, duration):
+        if curjudge[self.keynumb] > self.judgenumb:
+            return 1
         img = resize(self.img, self.size)
         blit_center(screen, img, (self.xloc, self.yloc))
         if self.size <= self.des_size:
             return 1
         else:
             self.size -= (self.orig_size - self.des_size) / (fps * duration)
-        return 0
+            return 0

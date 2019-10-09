@@ -49,13 +49,10 @@ screen.blit(info, (0, 0))
 pygame.display.update()
 pygame.time.wait(3000)
 starttime = pygame.time.get_ticks()
+pygame.time.wait(duration)
+flamingo.music.play()
 while True:
     curtime = get_times(starttime, pygame.time.get_ticks())
-    if (not musicplay) and curtime >= duration * 1000:
-        flamingo.music.play()
-        musicplay = True
-        print('music started')
-        print(curtime)
     screen.blit(background, (0, 0))
     currentinput = tuple(map(lambda x:  pygame.key.get_pressed()[x], (K_t, K_y, K_g, K_h, K_b, K_n)))
     for ispressed, numb in zip(currentinput, range(6)):
@@ -75,20 +72,20 @@ while True:
             yloc = 0.8
         blit_center(screen, outline_mod, (xloc, yloc))
     for x in range(6):
-        if notelist[x][shownote[x]] * 1000 <= curtime:
-            shownote[x] += 1
+        if (notelist[x][shownote[x]] - duration) * 1000 <= curtime:
             noteimg = pygame.image.load("res/image/ingame/outside"+str(x+1)+".png").convert_alpha()
             noteimg = resize_height(noteimg, screen.get_height() * 0.25)
-            notes.append(note(x, noteimg))
+            notes.append(note(x, shownote[x], noteimg))
+            shownote[x] += 1
     minusnumb = 0
     for x in range(len(notes)):
         x -= minusnumb
-        if notes[x].blit(screen, rolex.get_fps(), duration):
+        if notes[x].blit(screen, judgenote, rolex.get_fps(), duration):
             del(notes[x])
             minusnumb += 1
     fps = floor(rolex.get_fps())
     disptime = str(curtime / 1000)[:7]
-    curnotes = str(list(map(lambda x, y:  str(x[y])[:6], notelist, shownote))).replace("[", "").replace("]", "").replace("'", "").replace(", ", "\n")
+    curnotes = str(list(map(lambda x, y:  str(x[y] - duration), notelist, shownote))).replace("[", "").replace("]", "").replace("'", "").replace(", ", "\n")
     info = multilinerender(noto['regular'], str(fps)+"\n"+disptime+"\n"+curnotes)
     screen.blit(info, (0, 0))
     pygame.display.flip()
