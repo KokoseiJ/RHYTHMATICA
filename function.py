@@ -207,7 +207,6 @@ def get_note(notelist):
             div = 0
             time = 0
             for x in notelist[1:]:
-                print(x)
                 if not x:
                     continue
                 elif x[0] == "b":
@@ -232,11 +231,11 @@ def get_note(notelist):
 def get_times(starttime):
     return (pygame.time.get_ticks() - starttime)
 
-def judge(starttime, judgetime, duration): #1 - HIT 0 - miss
+def judge(starttime, judgetime, duration): #1 - HIT 2 - miss
     curtime = get_times(starttime)
-    judgetime = (judgetime - duration) * 1000
-    if judgetime - 0.6 < curtime:
-        if judgetime - 0.5 < curtime and curtime < 0.2:
+    judgetime = judgetime * 1000
+    if judgetime - 600 < curtime:
+        if judgetime - 500 < curtime and curtime < judgetime + 200:
             return 1
         else:
             return 2

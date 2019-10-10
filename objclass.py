@@ -108,16 +108,8 @@ class note:
         self.keynumb = keynumb
         self.img = img
         self.judgenumb = judgenumb
-        if keynumb % 2:
-            self.xloc = 0.65
-        else:
-            self.xloc = 0.35
-        if keynumb < 2:
-            self.yloc = 0.2
-        elif keynumb < 4:
-            self.yloc = 0.5
-        else:
-            self.yloc = 0.8
+        loc = ((0.35, 0.2), (0.65, 0.2), (0.35, 0.5), (0.65, 0.5), (0.35, 0.8), (0.65, 0.8))
+        self.xloc, self.yloc = loc[keynumb]
         self.orig_size = 2.5
         self.size = self.orig_size
         self.des_size = 1
