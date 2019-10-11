@@ -39,12 +39,15 @@ rolex = pygame.time.Clock()
 
 #####set required variables#####
 songnumb = 0 #songnumb should be set as 0.
-
+desiredfps = 150 #set fps.
+speed = 1
+keylist = (K_t, K_y, K_g, K_h, K_b, K_n)
+loc = ((0.35, 0.2), (0.65, 0.2), (0.35, 0.5), (0.65, 0.5), (0.35, 0.8), (0.65, 0.8))
 
 #####make/load/process resources#####
 #make a new Surface filled with color white, because black is not my favorite color xD
-background = pygame.Surface(screen.get_size()).convert()
-background.fill((255, 255, 255))
+whitebg = pygame.Surface(screen.get_size()).convert()
+whitebg.fill((255, 255, 255))
 
 #load electron image, resize it and append 10 intro_electron class with randomly given arguments.
 electron = pygame.image.load("res/image/ingame/inside1.png").convert_alpha()
@@ -52,6 +55,11 @@ electron = resize_height(electron, screen.get_height())
 electrons = []
 for x in range(10):
     electrons.append(intro_electron(electron, randint(1, 10)/10, randint(1, 10)/10, randint(1, 2)/10))
+
+outside = tuple(map(lambda x:  pygame.image.load("res/image/ingame/outside"+str(x+1)+".png").convert_alpha(), range(6)))
+
+outline = pygame.image.load("res/image/ingame/outsidecover.png").convert_alpha()
+outline = resize_height(outline, screen.get_height() * 0.25)
 
 #load logo, resize it a bit because it's T 0 0  T H I C C
 logo = pygame.image.load("res/image/ingame/Rhythmatica.png").convert_alpha()
@@ -83,7 +91,7 @@ intromusic.play()
 #####This is the intro code!#####
 while True: # Let's repeat this until python breaks something.
     #first, blit the background.
-    screen.blit(background, (0, 0))
+    screen.blit(whitebg, (0, 0))
     #intro_electron class have its own blit method, and will blit itself to the argument. so we call all of them.
     for x in electrons:
         x.blit(screen)
@@ -170,7 +178,7 @@ while True:
                 else:
                     songnumb -= 1
                 #move the images.
-                move_right(rolex, screen, background, songpacks[prevsongnumb], songpacks[songnumb])
+                move_right(rolex, screen, whitebg, songpacks[prevsongnumb], songpacks[songnumb], desiredfps)
                 #get a information surface from songpack instance
                 screen.blit(songpacks[songnumb].get_surf(screen.get_size()), (0, 0))
                 #flip!
@@ -185,7 +193,7 @@ while True:
                     songnumb = 0
                 else:
                     songnumb += 1
-                move_left(rolex, screen, background, songpacks[prevsongnumb], songpacks[songnumb])
+                move_left(rolex, screen, whitebg, songpacks[prevsongnumb], songpacks[songnumb], desiredfps)
                 screen.blit(songpacks[songnumb].get_surf(screen.get_size()), (0, 0))
                 pygame.display.update()
                 pygame.time.wait(100)
@@ -193,3 +201,46 @@ while True:
     else: #If nothing broke:
         continue #do it uinthill they break something
     break #boom
+songpacks[songnumb].pre.stop()
+startsound.play() #and start the start-effect sound.
+fadeout_screen(rolex, screen, screen, loadimg)
+
+#####Preparation Process#####
+#load notes.
+notelist = get_note(songpacks[songnumb].notelist)
+noteamount = sum(map(lambda x:  len(x), notelist))
+
+#set some variables.
+duration = (60 / songpacks[songnumb].bpm) / speed
+notes = []
+
+ispressed = [0, 0, 0, 0, 0, 0]
+shownote = [0, 0, 0, 0, 0, 0]
+judgenote = [0, 0, 0, 0, 0, 0]
+
+score = 0
+maxcombo = 0
+combo = 0
+hit = 0
+miss = 0
+judge_count = [0, 0, True]
+ishit = False
+ismiss = False
+
+#draw circles.
+background = pygame.Surface(screen.get_size()).convert()
+musicbg = songpacks[songnumb].image
+musicbg = pygame.transform.scale(musicbg, screen.get_size())
+musicbg.set_alpha(100)
+background.blit(whitebg, (0, 0))
+background.blit(musicbg, (0, 0))
+for x in range(6):
+    inside = pygame.image.load("res/image/ingame/inside"+str(x+1)+".png").convert_alpha()
+    inside = resize_height(inside, screen.get_height() * 0.25)
+    blit_center(background, inside, loc[x])
+tmpscreen = pygame.Surface(screen.get_size()).convert()
+tmpscreen.blit(background, (0, 0))
+for x in range(6):
+    blit_center(tmpscreen, outline, loc[x])
+
+fadein_screen(rolex, screen, tmpscreen, loadimg)

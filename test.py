@@ -9,7 +9,7 @@ def clear():
     os.system("cls")
 
 #initialize screen
-pygame.mixer.pre_init(48000, -16, 2, 1024)
+pygame.mixer.pre_init(44100, -16, 2, 1024)
 pygame.init()
 
 screen = pygame.display.set_mode(size = (1280, 720))
@@ -23,7 +23,7 @@ noto['regular'] = pygame.font.Font("res/fonts/NotoSans-Regular.ttf", 50)
 
 
 
-flamingo = songpack('Sad Machine', noto)
+flamingo = songpack('Himiko', noto)
 notelist = get_note(flamingo.notelist)
 noteamount = sum(map(lambda x:  len(x), notelist))
 
@@ -31,6 +31,8 @@ noteamount = sum(map(lambda x:  len(x), notelist))
 background = pygame.Surface(screen.get_size())
 background = background.convert()
 background.fill((255, 255, 255))
+
+outside = tuple(map(lambda x:  pygame.image.load("res/image/ingame/outside"+str(x+1)+".png").convert_alpha(), range(6)))
 
 outline = pygame.image.load("res/image/ingame/outsidecover.png").convert_alpha()
 outline = resize_height(outline, screen.get_height() * 0.25)
@@ -47,8 +49,8 @@ ispressed = [0, 0, 0, 0, 0, 0]
 shownote = [0, 0, 0, 0, 0, 0]
 judgenote = [0, 0, 0, 0, 0, 0]
 notes = []
-desiredfps = 60
-duration = (60 / flamingo.bpm) / 1.5
+desiredfps = 10000
+duration = (60 / flamingo.bpm) / 0.5
 
 score = 0
 maxcombo = 0
@@ -92,7 +94,7 @@ while True:
             for key, numb in zip(keylist, range(6)):
                 if event.key == key:
                     ispressed[numb] = 1
-                    if not len(notelist[x]) <= judgenote[x]:
+                    if not len(notelist[numb]) <= judgenote[numb]:
                         judgeres = judge(starttime, notelist[numb][judgenote[numb]], duration)
                         if judgeres:
                             print(judgeres)
@@ -131,19 +133,11 @@ while True:
     for x in range(6):
         if not len(notelist[x]) <= shownote[x]:
             if (notelist[x][shownote[x]] - duration) * 1000 <= curtime:
-                noteimg = pygame.image.load("res/image/ingame/outside"+str(x+1)+".png").convert_alpha()
+                noteimg = outside[x]
                 noteimg = resize_height(noteimg, screen.get_height() * 0.25)
                 notes.append(note(x, shownote[x], noteimg))
                 shownote[x] += 1
-    #####Blit notes, Delete it from the list if it shouldn't be blited#####
-    minusnumb = 0
-    for x in range(len(notes)):
-        x -= minusnumb
-        if notes[x].blit(screen, judgenote, curfps, duration):
-            del(notes[x])
-            minusnumb += 1
-    #####Judgement when player has press the key too lately, or even did not pressed the key#####
-    for x in range(6):
+        #####Judgement when player has press the key too lately, or even did not pressed the key#####
         if not len(notelist[x]) <= judgenote[x]:
             if curtime > (notelist[x][judgenote[x]] + 0.3) * 1000:
                 judgenote[x] += 1
@@ -152,26 +146,33 @@ while True:
                 ishit = False
                 ismiss = True
                 judge_count = [0, 0, True]
+    #####Blit notes, Delete it from the list if it shouldn't be blited#####
+    minusnumb = 0
+    for x in range(len(notes)):
+        x -= minusnumb
+        if notes[x].blit(screen, judgenote, curfps, duration):
+            del(notes[x])
+            minusnumb += 1
     #####blit judgement text#####
     if ishit:
         judge_count[0] += 1
         if judge_count[2]:
             blit_center(screen, hitimg)
-        if judge_count[0] == 3:
+        if judge_count[0] >= curfps * 0.05:
             judge_count[0] = 0
             judge_count[1] += 1
             judge_count[2] = not judge_count[2]
-        if judge_count[1] == 5:
+        if judge_count[1] == 10:
             ishit = False
     elif ismiss:
         judge_count[0] += 1
         if judge_count[2]:
             blit_center(screen, missimg)
-        if judge_count[0] == 3:
+        if judge_count[0] >= curfps * 0.05:
             judge_count[0] = 0
             judge_count[1] += 1
             judge_count[2] = not judge_count[2]
-        if judge_count[1] == 5:
+        if judge_count[1] == 10:
             ismiss = False
     screen.blit(noto['regular'].render(str(int(curfps)), 1, (0, 0, 0), None), (0, 0))
     pygame.display.flip()
