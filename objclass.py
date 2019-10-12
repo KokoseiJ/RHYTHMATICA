@@ -20,7 +20,7 @@ class intro_electron:
         self.img = img
         self.loc = (loc_x, loc_y)
         self.size = size
-        self.isbig = False
+        self.isbig = True
         return
     def blit(self, screen):
         if self.isbig:
@@ -72,7 +72,11 @@ class songpack:
         rtnsurf = pygame.Surface(size).convert()
         white = pygame.Surface(size).convert()
         white.fill((255, 255, 255))
-        bg = pygame.transform.scale(self.image, size)
+        imgsize = self.image.get_size()
+        if imgsize[0] < imgsize[1]:
+            bg = resize_width(self.image, size[0])
+        else:
+            bg = resize_height(self.image, size[1])
         bg.set_alpha(100)
         preview = resize_height(self.image, rtnsurf.get_height() / 2)
         txt = multilinerender(self.font['regular'], self.name+"\nArtist:"+self.artist+"\nBPM:"+str(self.bpm)+"\nDifficulty:"+self.difficulty, 10)
@@ -80,7 +84,7 @@ class songpack:
         guide = multilinerender(self.font['black'], "Press T, Y to change the speed.\nPress G, H to change the song.\nPress N to start the game.", 10)
         guide = resize_height(guide, rtnsurf.get_height() / 6)
         rtnsurf.blit(white, (0, 0))
-        rtnsurf.blit(bg, (0, 0))
+        blit_center(rtnsurf, bg)
         blit_center(rtnsurf, preview, (0.5, 0), (0.5, 0))
         blit_center(rtnsurf, txt, (0.5, 0.5), (0.5, 0))
         blit_center(rtnsurf, guide, (0.5, 1), (0.5, 1))

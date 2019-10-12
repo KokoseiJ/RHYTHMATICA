@@ -6,7 +6,7 @@ import os
 print("ligma")
 
 def clear():
-    os.system("cls")
+    os.system("clear")
 
 #initialize screen
 pygame.mixer.pre_init(44100, -16, 2, 1024)
@@ -49,8 +49,8 @@ ispressed = [0, 0, 0, 0, 0, 0]
 shownote = [0, 0, 0, 0, 0, 0]
 judgenote = [0, 0, 0, 0, 0, 0]
 notes = []
-desiredfps = 10000
-duration = (60 / flamingo.bpm) / 0.5
+desiredfps = 60
+duration = (60 / flamingo.bpm) / 0.75
 
 score = 0
 maxcombo = 0
@@ -81,10 +81,9 @@ screen.blit(background, (0, 0))
 pygame.display.update()
 
 starttime = pygame.time.get_ticks()
-pygame.time.wait(int(duration))
 flamingo.music.play()
 
-while True:
+while pygame.mixer.get_busy():
     curtime = get_times(starttime)
     curfps = rolex.get_fps()
     screen.blit(background, (0, 0))
@@ -97,7 +96,7 @@ while True:
                     if not len(notelist[numb]) <= judgenote[numb]:
                         judgeres = judge(starttime, notelist[numb][judgenote[numb]], duration)
                         if judgeres:
-                            print(judgeres)
+                            #print(judgeres)
                             judgenote[numb] += 1
                             if judgeres == 1:
                                 score += 10000 / noteamount

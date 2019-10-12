@@ -15,12 +15,14 @@
 #along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import pygame
+from math import floor
+from time import sleep
 
 ########################
 #####Screen Effects#####
 ########################
 
-def fadeout_screen(clock, screen, tmpscreen, image, duration = 1.5, fps = 60):
+def fadeout_screen(clock, screen, tmpscreen, image, fps = 60, duration = 1.5, desopacity = 50):
     print("fadeout started")
     image = pygame.transform.scale(image, screen.get_size()) #resize the image as the size of the screen, so the image will fill the screen completely.
     opacity = 0 #set opacity to 0
@@ -28,9 +30,11 @@ def fadeout_screen(clock, screen, tmpscreen, image, duration = 1.5, fps = 60):
         screen.blit(tmpscreen, (0, 0)) #blit the backed up screen.
         image.set_alpha(opacity) #set the image's alpha to [opacity]
         screen.blit(image, (0, 0)) #blit the image.
-        opacity += (50 / (fps * duration)) #increase opacity a bit.
+        print(image.get_alpha())
+        opacity += (desopacity / (fps * duration)) #increase opacity a bit.
         pygame.display.update() #flip!
         clock.tick(fps) #now wait for 1/60 secs. wait, is it sec or secs? dunno lol
+    print(image.get_alpha())
     print("fadeout finished")
     return
 
@@ -42,9 +46,11 @@ def fadein_screen(clock, screen, tmpscreen, image, duration = 1.5, fps = 60):
         screen.blit(tmpscreen, (0, 0)) #blit the backed up screen.
         image.set_alpha(opacity) #set the image's alpha to [opacity]
         screen.blit(image, (0, 0)) #blit the image.
+        print(image.get_alpha())
         opacity -= (255 / (fps * duration)) #increase opacity a bit.
         pygame.display.update() #flip!
         clock.tick(fps) #now wait for 1/60 secs. wait, is it sec or secs? dunno lol
+    print(image.get_alpha())
     print("fadein finished")
     return
 
