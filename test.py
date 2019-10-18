@@ -12,14 +12,14 @@ def clear():
 pygame.mixer.pre_init(44100, -16, 2, 1024)
 pygame.init()
 
-screen = pygame.display.set_mode(size = (1280, 720))
+screen = pygame.display.set_mode(size = (640, 480))
 pygame.display.set_caption("RHYTHMATICA")
 
 rolex = pygame.time.Clock()
 
 noto = {}
-noto['black'] = pygame.font.Font("res/fonts/NotoSans-Black.ttf", 50)
-noto['regular'] = pygame.font.Font("res/fonts/NotoSans-Regular.ttf", 50)
+noto['black'] = pygame.font.Font("res/fonts/NotoSans-Black.ttf", 150)
+noto['regular'] = pygame.font.Font("res/fonts/NotoSans-Regular.ttf", 150)
 
 
 
@@ -173,6 +173,10 @@ while pygame.mixer.get_busy():
             judge_count[2] = not judge_count[2]
         if judge_count[1] == 10:
             ismiss = False
+    if True:
+        combotxt = noto['black'].render(str(combo), 1, (0, 0, 0), None)
+        combotxt = resize_height(combotxt, screen.get_height() * 0.1)
+        blit_center(screen, combotxt, (0.5, 0.65))
     screen.blit(noto['regular'].render(str(int(curfps)), 1, (0, 0, 0), None), (0, 0))
     pygame.display.flip()
     rolex.tick(desiredfps)

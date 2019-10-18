@@ -152,16 +152,28 @@ def resize_width(surf, deswidth):
     width = surf.get_width()
     return pygame.transform.scale(surf, (int(deswidth), int(height * deswidth / width)))
 
-def multilinerender(font, text, antialias = 1, color = (0, 0, 0), background = None):
+def multilinerender(font, text, antialias = 10, color = (0, 0, 0), bgcolor = False, stroke = False):
     renderedlist = []
     for x in text.split("\n"):
-        renderedlist.append(font.render(x, antialias, color, background))
-    return combinesurfs(renderedlist)
+        if stroke:
+            txtrender = font.render(x, antialias, color, None).convert_alpha()
+            outlinerender = font.render(x, antialias, (0, 0, 0), None).convert_alpha()
+            space = 3
+            renderres = pygame.Surface(tuple(map(lambda x:  int(x + space), outlinerender.get_size())), pygame.SRCALPHA).convert_alpha()
+            for x in ((0, 0), (1, 0), (0, 1), (1, 1)):
+                blit_center(renderres, outlinerender, x, x)
+            blit_center(renderres, txtrender)
+        else:
+            renderres = font.render(x, antialias, color, None).convert_alpha()
+        renderedlist.append(renderres)
+    return combinesurfs(renderedlist, bgcolor)
 
-def combinesurfs(surf):
+def combinesurfs(surf, bgcolor = False):
     width = max(tuple(map(lambda x:  x.get_width(), surf)))
     height = sum(tuple(map(lambda x:  x.get_height(), surf)))
     rtnsurf = pygame.Surface((width, height), pygame.SRCALPHA).convert_alpha()
+    if bgcolor:
+        rtnsurf.fill(bgcolor)
     prevyloc = 0
     for x in surf:
         rtnsurf.blit(x,((width / 2) - (x.get_width() / 2), prevyloc))

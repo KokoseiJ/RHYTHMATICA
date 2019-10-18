@@ -170,6 +170,7 @@ blit_center(tmpscreen, speedtxt, (1, 1), (1, 1))
 fadein_screen(rolex, screen, tmpscreen, loadimg)
 #play the preview song.
 songpacks[songnumb].pre.play()
+
 #flush the event queue, to prevent some troubles that will happen when players pressing their keyboard...
 pygame.event.clear()
 
@@ -261,11 +262,12 @@ fadeout_screen(rolex, screen, screen, loadimg)
 
 #####Preparation Process#####
 #load notes.
-notelist = get_note(songpacks[songnumb].notelist)
+cursongpack = songpacks[songnumb]
+notelist = get_note(cursongpack.notelist)
 noteamount = sum(map(lambda x:  len(x), notelist))
 
 #set some variables.
-duration = (60 / songpacks[songnumb].bpm) / speed
+duration = (60 / cursongpack.bpm) / speed
 notes = []
 
 ispressed = [0, 0, 0, 0, 0, 0]
@@ -283,7 +285,7 @@ ismiss = False
 
 #draw circles.
 background = pygame.Surface(screen.get_size()).convert()
-musicbg = songpacks[songnumb].image
+musicbg = cursongpack.image
 scrsize = screen.get_size()
 imgsize = musicbg.get_size()
 if imgsize[0] < imgsize[1]:
@@ -291,8 +293,17 @@ if imgsize[0] < imgsize[1]:
 else:
     musicbg = resize_height(musicbg, scrsize[1])
 musicbg.set_alpha(100)
+
 background.blit(whitebg, (0, 0))
 blit_center(background, musicbg)
+nametxt = noto['black'].render(cursongpack.artist + " - " + cursongpack.name, 10, (255, 255, 255), None)
+nametxt = resize_onload(screen, nametxt, 0.4)
+nametxt_bg = pygame.Surface((screen.get_width(), nametxt.get_height()))
+nametxt_bg.fill((0, 0, 0))
+nametxt_bg.set_alpha(100)
+blit_center(background, nametxt_bg, (0.5, 0), (0.5, 0))
+blit_center(background, nametxt, (0.5, 0), (0.5, 0))
+
 for x in range(6):
     inside = pygame.image.load("res/image/ingame/inside"+str(x+1)+".png").convert_alpha()
     inside = resize_height(inside, screen.get_height() * 0.25)
@@ -305,12 +316,15 @@ for x in range(6):
 fadein_screen(rolex, screen, tmpscreen, loadimg)
 
 starttime = pygame.time.get_ticks()
-songpacks[songnumb].music.play()
+cursongpack.music.play()
 
 while pygame.mixer.get_busy():
     curtime = get_times(starttime)
     curfps = rolex.get_fps()
     screen.blit(background, (0, 0))
+    scoreimg = noto['regular'].render(str(int(score)), 10, (0, 0, 0), None)
+    scoreimg = resize_height(scoreimg, screen.get_height() * 0.1)
+    blit_center(screen, scoreimg, (0.5, 1), (0.5, 1))
     #####detecting keypress / exit signal, judgement when keydown, gets each key's status(pressed or not)#####
     for event in pygame.event.get():
         if event.type == KEYDOWN:
@@ -381,6 +395,8 @@ while pygame.mixer.get_busy():
     if ishit:
         judge_count[0] += 1
         if judge_count[2]:
+            #hitimg = multilinerender(noto['black'], "HIT!! "+str(combo), color = (0, 255, 240))
+            #hitimg = resize_height(hitimg, screen.get_height() * 0.4)
             blit_center(screen, hitimg)
         if judge_count[0] >= curfps * 0.05:
             judge_count[0] = 0
@@ -398,8 +414,12 @@ while pygame.mixer.get_busy():
             judge_count[2] = not judge_count[2]
         if judge_count[1] == 10:
             ismiss = False
-    screen.blit(noto['regular'].render(str(int(curfps)), 1, (0, 0, 0), None), (0, 0))
+    if combo:
+        combotxt = noto['black'].render(str(combo), 1, (0, 0, 0), None)
+        combotxt = resize_height(combotxt, screen.get_height() * 0.1)
+        blit_center(screen, combotxt, (0.5, 0.65))
     pygame.display.flip()
     rolex.tick(desiredfps)
 startsound.play() #and start the start-effect sound.
 fadeout_screen(rolex, screen, tmpscreen, loadimg, desopacity = 255)
+60 * 0.05
