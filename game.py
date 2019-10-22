@@ -296,6 +296,7 @@ musicbg.set_alpha(100)
 
 background.blit(whitebg, (0, 0))
 blit_center(background, musicbg)
+
 nametxt = noto['black'].render(cursongpack.artist + " - " + cursongpack.name, 10, (255, 255, 255), None)
 nametxt = resize_onload(screen, nametxt, 0.4)
 nametxt_bg = pygame.Surface((screen.get_width(), nametxt.get_height()))
@@ -422,4 +423,37 @@ while pygame.mixer.get_busy():
     rolex.tick(desiredfps)
 startsound.play() #and start the start-effect sound.
 fadeout_screen(rolex, screen, tmpscreen, loadimg, desopacity = 255)
-60 * 0.05
+
+background = pygame.Surface(screen.get_size()).convert()
+musicbg = cursongpack.image
+scrsize = screen.get_size()
+imgsize = musicbg.get_size()
+if imgsize[0] < imgsize[1]:
+    musicbg = resize_width(musicbg, scrsize[0])
+else:
+    musicbg = resize_height(musicbg, scrsize[1])
+musicbg.set_alpha(100)
+
+background.blit(whitebg, (0, 0))
+blit_center(background, musicbg)
+restxt = noto['black'].render("Result", 10, (0, 0, 0), None)
+restxt = resize_onload(screen, restxt, 0.2)
+blit_center(background, restxt, (0.5, 0), (0.5, 0))
+nametxt = noto['black'].render(cursongpack.artist + " - " + cursongpack.name, 10, (255, 255, 255), None)
+nametxt = resize_onload(screen, nametxt, 0.4)
+nametxt_bg = pygame.Surface((screen.get_width(), nametxt.get_height()))
+nametxt_bg.fill((0, 0, 0))
+nametxt_bg.set_alpha(100)
+blit_center(background, nametxt_bg, (0.5, 1), (0.5, 1))
+blit_center(background, nametxt, (0.5, 1), (0.5, 1))
+
+scoretxt = multilinerender(noto['regular'], "HIT\nMISS\nMAXCOMBO\nSCORE", align = 1)
+scoretxt = resize_height(scoretxt, screen.get_height() * 0.4)
+
+tmpscreen = background
+blit_center(tmpscreen, scoretxt, (0, 0.5), (0, 0.5))
+
+fadein_screen(rolex, screen, tmpscreen, loadimg)
+
+screen.blit(background, (0, 0))
+pygame.
