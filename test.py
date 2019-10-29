@@ -23,14 +23,14 @@ noto['regular'] = pygame.font.Font("res/fonts/NotoSans-Regular.ttf", 150)
 
 
 
-flamingo = songpack('Himiko', noto)
-notelist = get_note(flamingo.notelist)
+cursongpack = songpack('Himiko', noto)
+notelist = get_note(cursongpack.notelist)
 noteamount = sum(map(lambda x:  len(x), notelist))
 
 #load logo and stuffs
-background = pygame.Surface(screen.get_size())
-background = background.convert()
-background.fill((255, 255, 255))
+whitebg = pygame.Surface(screen.get_size())
+whitebg = whitebg.convert()
+whitebg.fill((255, 255, 255))
 
 outside = tuple(map(lambda x:  pygame.image.load("res/image/ingame/outside"+str(x+1)+".png").convert_alpha(), range(6)))
 
@@ -50,7 +50,7 @@ shownote = [0, 0, 0, 0, 0, 0]
 judgenote = [0, 0, 0, 0, 0, 0]
 notes = []
 desiredfps = 60
-duration = (60 / flamingo.bpm) / 0.75
+duration = (60 / cursongpack.bpm) / 0.75
 
 score = 0
 maxcombo = 0
@@ -74,22 +74,28 @@ for x in range(1, 7):
         yloc = 0.5
     else:
         yloc = 0.8
-    blit_center(background, inside, (xloc, yloc))
+    blit_center(whitebg, inside, (xloc, yloc))
 
-screen.blit(background, (0, 0))
+screen.blit(whitebg, (0, 0))
 
 pygame.display.update()
 
 starttime = pygame.time.get_ticks()
-flamingo.music.play()
+cursongpack.music.play()
 
 while pygame.mixer.get_busy():
     curtime = get_times(starttime)
     curfps = rolex.get_fps()
-    screen.blit(background, (0, 0))
+    screen.blit(whitebg, (0, 0))
     #####detecting keypress / exit signal, judgement when keydown, gets each key's status(pressed or not)#####
     for event in pygame.event.get():
         if event.type == KEYDOWN:
+            if event.key == K_q:
+                hit = 135
+                miss = 246
+                maxcombo = 256
+                score = 8295
+                cursongpack.music.stop()
             for key, numb in zip(keylist, range(6)):
                 if event.key == key:
                     ispressed[numb] = 1
@@ -180,3 +186,80 @@ while pygame.mixer.get_busy():
     screen.blit(noto['regular'].render(str(int(curfps)), 1, (0, 0, 0), None), (0, 0))
     pygame.display.flip()
     rolex.tick(desiredfps)
+
+background = pygame.Surface(screen.get_size()).convert()
+musicbg = cursongpack.image
+scrsize = screen.get_size()
+imgsize = musicbg.get_size()
+if imgsize[0] < imgsize[1]:
+    musicbg = resize_width(musicbg, scrsize[0])
+else:
+    musicbg = resize_height(musicbg, scrsize[1])
+musicbg.set_alpha(100)
+
+background.blit(whitebg, (0, 0))
+blit_center(background, musicbg)
+restxt = noto['black'].render("Result", 10, (0, 0, 0), None)
+restxt = resize_onload(screen, restxt, 0.2)
+blit_center(background, restxt, (0.5, 0), (0.5, 0))
+nametxt = noto['black'].render(cursongpack.artist + " - " + cursongpack.name, 10, (255, 255, 255), None)
+nametxt = resize_onload(screen, nametxt, 0.4)
+nametxt_bg = pygame.Surface((screen.get_width(), nametxt.get_height()))
+nametxt_bg.fill((0, 0, 0))
+nametxt_bg.set_alpha(100)
+blit_center(background, nametxt_bg, (0.5, 1), (0.5, 1))
+blit_center(background, nametxt, (0.5, 1), (0.5, 1))
+
+hitcount = 0
+misscount = 0
+combocount = 0
+scorecount = 0
+
+scoretxt = multilinerender(noto['regular'], 
+'''HIT    0
+MISS    0
+MAXCOMBO    0
+SCORE    0''', align = 1)
+scoretxt = resize_height(scoretxt, screen.get_height() * 0.4)
+
+tmpscreen = background
+blit_center(tmpscreen, scoretxt, (0, 0.5), (0, 0.5))
+
+fadein_screen(rolex, screen, tmpscreen, whitebg)
+
+screen.blit(tmpscreen, (0, 0))
+pygame.display.flip()
+
+pygame.time.wait(1000)
+
+while not scorecount >= score:
+    if hitcount < hit:
+        hitcount += 5
+        if hitcount > hit:
+            hitcount = hit
+    elif misscount < miss:
+        misscount += 5
+        if misscount > miss:
+            misscount = miss
+    elif combocount < combo:
+        combocount += 5
+        if combocount > combo:
+            combocount = combo
+    elif scorecount < score:
+        scorecount += 100
+        if scorecount > score:
+            scorecount = score
+
+    scoretxt = multilinerender(noto['regular'],
+    "HIT    " + hitcount + "\n" + 
+    "MISS    " + misscount + "\n" +
+    "COMBO    " + combocount + "\n" +
+    "SCORE    " + scorecount,
+    align = 1)
+    scoretxt = resize_height(scoretxt, screen.get_height() * 0.4)
+
+    screen.blit(background, (0, 0))
+    blit_center(screen, scoretxt, (0, 0.5), (0, 0.5))
+    pygame.display.flip()
+
+    rolex.tick(20)

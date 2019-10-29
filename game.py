@@ -82,17 +82,20 @@ pressntostart = noto['black'].render("Press N to start", 10, (0, 0, 0)).convert_
 pressntostart = resize_onload(screen, pressntostart, 0.3)
 
 #load my cool intro uwu
-intromusic = pygame.mixer.Sound("res/audio/effect/Rhythmatica.wav")
+introsound = pygame.mixer.Sound("res/audio/effect/Rhythmatica.wav")
 
 #load the effect sounds.
 startsound = pygame.mixer.Sound("res/audio/effect/start.wav")
-changeeffect = pygame.mixer.Sound("res/audio/effect/nextsong.wav")
+changesound = pygame.mixer.Sound("res/audio/effect/nextsong.wav")
+
+#load the result music.
+resultsound = pygame.mixer.Sound("res/audio/effect/result.wav")
 
 #####aaand, finally we draw all these shit to the screen! yay!#####
 
 #at the start, we play the song.
 
-intromusic.play()
+introsound.play()
 
 #####This is the intro code!#####
 while True: # Let's repeat this until python breaks something.
@@ -120,7 +123,7 @@ while True: # Let's repeat this until python breaks something.
         rolex.tick(130 / 60 * 2)
         continue #let's keep this loop.
     break #if something broke, it will break this loop too.
-intromusic.stop() #stop the music.
+introsound.stop() #stop the music.
 startsound.play() #and start the start-effect sound.
 fadeout_screen(rolex, screen, screen, loadimg) #call the fadeout thing
 
@@ -208,7 +211,7 @@ while True:
 
             elif event.key == keylist[2]: #If the key that user pressed is G?
                 songpacks[songnumb].pre.stop() #stops the preview song.
-                changeeffect.play() #play the change effect sound.
+                changesound.play() #play the change effect sound.
                 prevsongnumb = songnumb #back up the previous song number, to show the song-changing effect
                 #Shift the songnumb.
                 if songnumb == 0: 
@@ -232,7 +235,7 @@ while True:
 
             elif event.key == keylist[3]: #Almost same as above.
                 songpacks[songnumb].pre.stop()
-                changeeffect.play()
+                changesound.play()
                 prevsongnumb = songnumb
                 if songnumb == songnumb_max - 1:
                     songnumb = 0
@@ -330,6 +333,10 @@ while pygame.mixer.get_busy():
     for event in pygame.event.get():
         if event.type == KEYDOWN:
             if event.key == K_q:
+                hit = 135
+                miss = 246
+                maxcombo = 256
+                score = 8295
                 songpacks[songnumb].music.stop()
             for key, numb in zip(keylist, range(6)):
                 if event.key == key:
@@ -447,13 +454,59 @@ nametxt_bg.set_alpha(100)
 blit_center(background, nametxt_bg, (0.5, 1), (0.5, 1))
 blit_center(background, nametxt, (0.5, 1), (0.5, 1))
 
-scoretxt = multilinerender(noto['regular'], "HIT\nMISS\nMAXCOMBO\nSCORE", align = 1)
+hitcount = 0
+misscount = 0
+combocount = 0
+scorecount = 0
+
+scoretxt = multilinerender(noto['regular'], 
+'''HIT    0
+MISS    0
+MAXCOMBO    0
+SCORE    0''', align = 1)
 scoretxt = resize_height(scoretxt, screen.get_height() * 0.4)
 
-tmpscreen = background
+tmpscreen = pygame.Surface(screen.get_size())
+tmpscreen.blit(background, (0, 0))
 blit_center(tmpscreen, scoretxt, (0, 0.5), (0, 0.5))
 
 fadein_screen(rolex, screen, tmpscreen, loadimg)
 
-screen.blit(background, (0, 0))
-pygame.
+screen.blit(tmpscreen, (0, 0))
+pygame.display.flip()
+
+resultsound.play()
+pygame.time.wait(1000)
+
+while not scorecount >= score:
+    if hitcount < hit:
+        hitcount += 5
+        if hitcount > hit:
+            hitcount = hit
+    elif misscount < miss:
+        misscount += 5
+        if misscount > miss:
+            misscount = miss
+    elif combocount < maxcombo:
+        combocount += 5
+        if combocount > maxcombo:
+            combocount = maxcombo
+    elif scorecount < score:
+        scorecount += 100
+        if scorecount > score:
+            scorecount = score
+
+    scoretxt = multilinerender(noto['regular'],
+    "HIT    " + str(hitcount) + "\n" + 
+    "MISS    " + str(misscount) + "\n" +
+    "MAXCOMBO    " + str(combocount) + "\n" +
+    "SCORE    " + str(scorecount),
+    align = 1)
+    scoretxt = resize_height(scoretxt, screen.get_height() * 0.4)
+
+    screen.blit(background, (0, 0))
+    blit_center(screen, scoretxt, (0, 0.5), (0, 0.5))
+    pygame.display.flip()
+
+    rolex.tick(20)
+
