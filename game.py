@@ -30,7 +30,7 @@ pygame.mixer.pre_init(44100, -16, 2, 1024) #Little Buffer, Less Delay!
 pygame.init() #initialize pygame.
 
 #set it's size, flags, caption.
-screen = pygame.display.set_mode(size = (1280, 720))
+screen = pygame.display.set_mode(size = (1920, 1080), flags = pygame.FULLSCREEN)
 pygame.display.set_caption("RHYTHMATICA")
 
 #get a new clock. is it a real Rolex? damn, that's cool.
@@ -479,6 +479,15 @@ resultsound.play()
 pygame.time.wait(1000)
 
 while not scorecount >= score:
+    for event in pygame.event.get():
+        if event.type == KEYDOWN:
+            if event.key == K_n:
+                hitcount = hit
+                misscount = miss
+                combocount = maxcombo
+                scorecount = int(score)
+        elif event.type == QUIT:#if user tried to close the window?
+            exit() #kill the python. simple
     if hitcount < hit:
         hitcount += 5
         if hitcount > hit:
@@ -494,7 +503,7 @@ while not scorecount >= score:
     elif scorecount < score:
         scorecount += 100
         if scorecount > score:
-            scorecount = score
+            scorecount = int(score)
 
     scoretxt = multilinerender(noto['regular'],
     "HIT    " + str(hitcount) + "\n" + 
@@ -509,4 +518,7 @@ while not scorecount >= score:
     pygame.display.flip()
 
     rolex.tick(20)
-
+while True:
+    for x in pygame.event.get():
+        if x.type == QUIT:
+            exit()
