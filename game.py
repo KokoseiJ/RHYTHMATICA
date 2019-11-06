@@ -30,7 +30,7 @@ pygame.mixer.pre_init(44100, -16, 2, 1024) #Little Buffer, Less Delay!
 pygame.init() #initialize pygame.
 
 #set it's size, flags, caption.
-screen = pygame.display.set_mode(size = (1920, 1080), flags = pygame.FULLSCREEN)
+screen = pygame.display.set_mode(size = (1280, 720))#, flags = pygame.FULLSCREEN)
 pygame.display.set_caption("RHYTHMATICA")
 
 #get a new clock. is it a real Rolex? damn, that's cool.
@@ -74,6 +74,9 @@ logo = resize_onload(screen, logo, 0.7)
 #load the loding screen, I won't resize it as long as it will be resized in fadeout/fadein functions. :accreate:
 loadimg = pygame.image.load("res/image/ingame/loading_wide.png").convert()
 
+#load the rating image.
+ratingimg = dict(map(lambda x:  (x, resize_onload(screen, pygame.image.load("res/image/rating/" + x + ".png").convert_alpha())), ('a', 'b', 'c', 'd', 'f', 's')))
+
 #load font, render a text kindly. uhh, maybe not that kind... nevermind.
 noto = {}
 noto['black'] = pygame.font.Font("res/fonts/NotoSans-Black.ttf", 100)
@@ -87,6 +90,9 @@ introsound = pygame.mixer.Sound("res/audio/effect/Rhythmatica.wav")
 #load the effect sounds.
 startsound = pygame.mixer.Sound("res/audio/effect/start.wav")
 changesound = pygame.mixer.Sound("res/audio/effect/nextsong.wav")
+clapsound = pygame.mixer.Sound("res/audio/effect/clap.wav")
+glugsound = pygame.mixer.Sound("res/audio/effect/Glug.wav")
+coinsound = pygame.mixer.Sound("res/audio/effect/Coin.wav")
 
 #load the result music.
 resultsound = pygame.mixer.Sound("res/audio/effect/result.wav")
@@ -347,6 +353,7 @@ while pygame.mixer.get_busy():
                             #print(judgeres)
                             judgenote[numb] += 1
                             if judgeres == 1:
+                                clapsound.play()
                                 score += 10000 / noteamount
                                 combo += 1
                                 if combo > maxcombo:  maxcombo = combo
@@ -479,6 +486,7 @@ resultsound.play()
 pygame.time.wait(1000)
 
 while not scorecount >= score:
+    coinsound.play()
     for event in pygame.event.get():
         if event.type == KEYDOWN:
             if event.key == K_n:
@@ -518,6 +526,40 @@ while not scorecount >= score:
     pygame.display.flip()
 
     rolex.tick(20)
+
+background.blit(screen, (0, 0))
+
+if score == 10000:
+    rating = "s"
+elif 8000 <= score < 10000:
+    rating = "a"
+elif 6000 <= score < 8000:
+    rating = "b"
+elif 4000 <= score < 6000:
+    rating = "c"
+elif 2000 <= score < 4000:
+    rating = "d"
+elif score < 2000:
+    rating = "f"
+
+glugsound.play()
+rating_size = 0
+for x in range(int(desiredfps * 0.3)):
+    rating_size += 1.25 / (desiredfps * 0.3)
+    screen.blit(background, (0, 0))
+    blit_center(screen, resize(ratingimg[rating], rating_size), (0.8, 0.5))
+
+    pygame.display.flip()
+    rolex.tick(60)
+
+for x in range(int(desiredfps * 0.2)):
+    rating_size -= 0.25 / (desiredfps * 0.2)
+    screen.blit(background, (0, 0))
+    blit_center(screen, resize(ratingimg[rating], rating_size), (0.8, 0.5))
+
+    pygame.display.flip()
+    rolex.tick(60)
+
 while True:
     for x in pygame.event.get():
         if x.type == QUIT:
