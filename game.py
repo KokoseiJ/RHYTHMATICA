@@ -564,3 +564,6 @@ while True:
     for x in pygame.event.get():
         if x.type == QUIT:
             exit()
+        elif x.type == KEYDOWN:
+            if x.key == K_n:
+                pass
