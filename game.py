@@ -469,10 +469,10 @@ while True:
     scorecount = 0
     
     scoretxt = multilinerender(noto['regular'], 
-    '''HIT    0
-    MISS    0
-    MAXCOMBO    0
-    SCORE    0''', align = 1)
+'''HIT    0
+MISS    0
+MAXCOMBO    0
+SCORE    0''', align = 1)
     scoretxt = resize_height(scoretxt, screen.get_height() * 0.4)
     
     tmpscreen = pygame.Surface(screen.get_size())
