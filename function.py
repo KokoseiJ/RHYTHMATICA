@@ -30,11 +30,9 @@ def fadeout_screen(clock, screen, tmpscreen, image, fps = 60, duration = 1.5, de
         screen.blit(tmpscreen, (0, 0)) #blit the backed up screen.
         image.set_alpha(opacity) #set the image's alpha to [opacity]
         screen.blit(image, (0, 0)) #blit the image.
-        print(image.get_alpha())
         opacity += (desopacity / (fps * duration)) #increase opacity a bit.
         pygame.display.update() #flip!
         clock.tick(fps) #now wait for 1/60 secs. wait, is it sec or secs? dunno lol
-    print(image.get_alpha())
     print("fadeout finished")
     return
 
@@ -46,11 +44,9 @@ def fadein_screen(clock, screen, tmpscreen, image, duration = 1.5, fps = 60):
         screen.blit(tmpscreen, (0, 0)) #blit the backed up screen.
         image.set_alpha(opacity) #set the image's alpha to [opacity]
         screen.blit(image, (0, 0)) #blit the image.
-        print(image.get_alpha())
         opacity -= (255 / (fps * duration)) #increase opacity a bit.
         pygame.display.update() #flip!
         clock.tick(fps) #now wait for 1/60 secs. wait, is it sec or secs? dunno lol
-    print(image.get_alpha())
     print("fadein finished")
     return
 
