@@ -463,6 +463,7 @@ while True:
     blit_center(background, nametxt_bg, (0.5, 1), (0.5, 1))
     blit_center(background, nametxt, (0.5, 1), (0.5, 1))
     
+    score = int(score)
     hitcount = 0
     misscount = 0
     combocount = 0
@@ -487,7 +488,7 @@ SCORE    0''', align = 1)
     resultsound.play()
     pygame.time.wait(1000)
     
-    while not scorecount >= score:
+    while not scorecount == score:
         coinsound.play()
         for event in pygame.event.get():
             if event.type == KEYDOWN:
@@ -495,7 +496,7 @@ SCORE    0''', align = 1)
                     hitcount = hit
                     misscount = miss
                     combocount = maxcombo
-                    scorecount = int(score)
+                    scorecount = score
             elif event.type == QUIT:#if user tried to close the window?
                 exit() #kill the python. simple
         if hitcount < hit:
@@ -513,7 +514,7 @@ SCORE    0''', align = 1)
         elif scorecount < score:
             scorecount += 100
             if scorecount > score:
-                scorecount = int(score)
+                scorecount = score
     
         scoretxt = multilinerender(noto['regular'],
         "HIT    " + str(hitcount) + "\n" + 
