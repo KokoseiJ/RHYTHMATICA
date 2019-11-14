@@ -23,7 +23,7 @@ from pygame.locals import *
 from random import randint
 import os
 print("ligma")
-ver = "A5P"
+ver = "A5P_Dongari"
 print("RHYTHMATICA", ver)
 
 
@@ -32,7 +32,7 @@ pygame.mixer.pre_init(44100, -16, 2, 1024) #Little Buffer, Less Delay!
 pygame.init() #initialize pygame.
 
 #set it's size, flags, caption.
-screen = pygame.display.set_mode(size = (1280, 720))#, flags = pygame.FULLSCREEN)
+screen = pygame.display.set_mode(size = (1366, 768), flags = pygame.FULLSCREEN)
 pygame.display.set_caption("RHYTHMATICA")
 
 #get a new clock. is it a real Rolex? damn, that's cool.
@@ -86,7 +86,7 @@ noto['regular'] = pygame.font.Font("res/fonts/NotoSans-Regular.ttf", 100)
 pressntostart = noto['black'].render("Press N to start", 10, (0, 0, 0)).convert_alpha()
 pressntostart = resize_onload(screen, pressntostart, 0.3)
 versiontxt = noto['black'].render("Ver: " + ver, 10, (0, 0, 0)).convert_alpha()
-versiontxt = resize_onload(screen, versiontxt, 0.1)
+versiontxt = resize_onload(screen, versiontxt, 0.15)
 
 #load my cool intro uwu
 introsound = pygame.mixer.Sound("res/audio/effect/Rhythmatica.wav")
