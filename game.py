@@ -23,6 +23,8 @@ from pygame.locals import *
 from random import randint
 import os
 print("ligma")
+ver = "A5P"
+print("RHYTHMATICA", ver)
 
 
 #####initialization process#####
@@ -83,6 +85,8 @@ noto['black'] = pygame.font.Font("res/fonts/NotoSans-Black.ttf", 100)
 noto['regular'] = pygame.font.Font("res/fonts/NotoSans-Regular.ttf", 100)
 pressntostart = noto['black'].render("Press N to start", 10, (0, 0, 0)).convert_alpha()
 pressntostart = resize_onload(screen, pressntostart, 0.3)
+versiontxt = noto['black'].render("Ver: " + ver, 10, (0, 0, 0)).convert_alpha()
+versiontxt = resize_onload(screen, versiontxt, 0.1)
 
 #load my cool intro uwu
 introsound = pygame.mixer.Sound("res/audio/effect/Rhythmatica.wav")
@@ -110,9 +114,10 @@ while True: # Let's repeat this until python breaks something.
     #intro_electron class have its own blit method, and will blit itself to the argument. so we call all of them.
     for x in electrons:
         x.blit(screen)
-    #blit logo, kind(maybe not)text to the screen.
+    #blit logo, kind(maybe not)texts to the screen.
     blit_center(screen, logo)
     blit_center(screen, pressntostart, (0.5, 0.75))
+    blit_center(screen, versiontxt, (1, 1), (1, 1))
     #and... flip! now you can see everything in the screen!
     pygame.display.flip()
     intro_beattime = pygame.time.get_ticks()
