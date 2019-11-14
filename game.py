@@ -269,6 +269,8 @@ while True:
                 elif event.key == keylist[5]: #if the key that user pressed is N?
                     print("n pressed") #first, print it in the console for debug purpose.
                     break #proceed to the next step!
+                elif event.key == K_q:
+                    exit()
         else: #If nothing broke:
             continue #do it uinthill they break something
         break #boom
