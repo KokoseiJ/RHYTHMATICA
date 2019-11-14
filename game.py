@@ -442,7 +442,6 @@ while True:
             blit_center(screen, combotxt, (0.5, 0.65))
         pygame.display.flip()
         rolex.tick(desiredfps)
-    startsound.play() #and start the start-effect sound.
     fadeout_screen(rolex, screen, tmpscreen, loadimg, desopacity = 255)
     
     background = pygame.Surface(screen.get_size()).convert()
