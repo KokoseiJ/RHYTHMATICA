@@ -1,0 +1,611 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"dir",
+				"directories"
+			],
+			[
+				"url",
+				"url_fortxt"
+			],
+			[
+				"post",
+				"postlist_sorted"
+			],
+			[
+				"key",
+				"key"
+			],
+			[
+				"in",
+				"invalidFileException"
+			],
+			[
+				"get_",
+				"get_region_list"
+			],
+			[
+				"region",
+				"region"
+			],
+			[
+				"hand",
+				"handshake_done"
+			],
+			[
+				"client_",
+				"client_session_id"
+			],
+			[
+				"n",
+				"n"
+			],
+			[
+				"sP",
+				"sPointTotal"
+			],
+			[
+				"pri",
+				"private_command"
+			],
+			[
+				"m",
+				"module_name"
+			],
+			[
+				"s",
+				"searchformat"
+			],
+			[
+				"f",
+				"filename"
+			],
+			[
+				"names",
+				"names"
+			],
+			[
+				"image",
+				"image_list"
+			],
+			[
+				"aga",
+				"again_flag"
+			],
+			[
+				"app",
+				"appendtmp"
+			],
+			[
+				"jud",
+				"judge_count"
+			],
+			[
+				"note",
+				"noteamount"
+			],
+			[
+				"du",
+				"duration"
+			],
+			[
+				"blit",
+				"blit_xloc"
+			],
+			[
+				"song",
+				"songnumb_max"
+			],
+			[
+				"load",
+				"loadimg"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "game_new.py",
+			"settings":
+			{
+				"buffer_size": 529,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "game.py",
+			"settings":
+			{
+				"buffer_size": 24015,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "function.py",
+			"settings":
+			{
+				"buffer_size": 10768,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "objclass.py",
+			"settings":
+			{
+				"buffer_size": 5467,
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+		[
+			[
+				[
+					"Packages/Python/Python.sublime-build",
+					""
+				],
+				[
+					"Packages/Python/Python.sublime-build",
+					"Syntax Check"
+				],
+				[
+					"Packages/Virtualenv/Python + Virtualenv.sublime-build",
+					""
+				],
+				[
+					"Packages/SublimeREPL/sublimerepl_build_system_hack.sublime-build",
+					""
+				]
+			],
+			[
+				"Packages/Python/Python.sublime-build",
+				""
+			]
+		]
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"remove",
+				"Package Control: Remove Package"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"disco",
+				"Discord Rich Presence: Connect to Discord"
+			],
+			[
+				"dis",
+				"Discord Rich Presence: Disconnect"
+			],
+			[
+				"discord",
+				"Discord Rich Presence: Disconnect"
+			],
+			[
+				"insta",
+				"Package Control: Install Package"
+			],
+			[
+				"a",
+				"Virtualenv: Activate"
+			],
+			[
+				"ac",
+				"Virtualenv: Activate"
+			],
+			[
+				"virt",
+				"Virtualenv: Activate"
+			],
+			[
+				"n",
+				"Virtualenv: New"
+			],
+			[
+				"vir",
+				"Virtualenv: Activate"
+			],
+			[
+				"act",
+				"Virtualenv: Activate"
+			],
+			[
+				"acti",
+				"Virtualenv: Activate"
+			],
+			[
+				"venv",
+				"Virtualenv: Activate"
+			],
+			[
+				"active",
+				"Virtualenv: Activate"
+			],
+			[
+				"ven",
+				"Virtualenv: Activate"
+			],
+			[
+				"sublime",
+				"Virtualenv: SublimeREPL - Python"
+			]
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 324.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/home/kokoseij/git/RHYTHMATICA",
+		"/home/kokoseij/git/RHYTHMATICA/res",
+		"/home/kokoseij/git/RHYTHMATICA/res/image"
+	],
+	"file_history":
+	[
+		"/home/kokoseij/git/RHYTHMATICA/function.py",
+		"/home/kokoseij/git/RHYTHMATICA/game.py",
+		"/home/kokoseij/git/IMC/rpg_remchan_daisuki/test_old.py",
+		"/home/kokoseij/git/IMC/rpg_remchan_daisuki/game.py",
+		"/home/kokoseij/git/IMC/rpg_remchan_daisuki/engine_old.py",
+		"/home/kokoseij/git/psiphon/psiphon.py",
+		"/home/kokoseij/drive_d/Programming_Archive/DDLC MOD MAKING/unrpyc-master/sayori.rpy",
+		"/home/kokoseij/git/darling/dc_parser_v2.py",
+		"/home/kokoseij/git/psiphon/memo.md",
+		"/home/kokoseij/git/IMC/rpg_remchan_daisuki/backend.py",
+		"/home/kokoseij/git/OrganiseDesktop/organise_desktop/Clean.py",
+		"/home/kokoseij/git/OrganiseDesktop/organise_desktop/organiseDesktop.py",
+		"/home/kokoseij/git/OrganiseDesktop/organise_desktop/setup.py",
+		"/home/kokoseij/git/OrganiseDesktop/organise_desktop/cronCleanUp.py",
+		"/home/kokoseij/git/OrganiseDesktop/organise_desktop/Extension.json",
+		"/home/kokoseij/git/IMC/rpg_remchan_daisuki/test.py",
+		"/home/kokoseij/test.py",
+		"/home/kokoseij/git/C++_test/hello_world.cpp",
+		"/home/kokoseij/git/darling/mungal_parser_v2.py",
+		"/home/kokoseij/Downloads/mungal_parser_v1.py",
+		"/home/kokoseij/git/IMC/rpg_remchan_daisuki/이벤트_핸들링_구상.md",
+		"/home/kokoseij/git/IMC/rpg_remchan_daisuki/maps/test/object",
+		"/home/kokoseij/git/darling/src/external/cocotron/AppKit/NSOpenGL/NSOpenGLContext.m",
+		"/home/kokoseij/git/IMC/rpg_remchan_daisuki/maps/test/floor",
+		"/home/kokoseij/git/IMC/rpg_remchan_daisuki/maps/test/texture.png",
+		"/home/kokoseij/.config/sublime-text-3/Packages/User/Virtualenv.sublime-settings",
+		"/home/kokoseij/git/IMC/rpg_remchan_daisuki/maps/test_doyun/floor",
+		"/home/kokoseij/git/rpg_remchan_daisuki/backend.py",
+		"/home/kokoseij/git/rpg_remchan_daisuki/test.py",
+		"/home/kokoseij/git/rpg_remchan_daisuki/maps/test/texture.png",
+		"/home/kokoseij/git/rpg_remchan_daisuki/game.py",
+		"/home/kokoseij/git/alt/psiphon/psi_ssh_connection.py",
+		"/home/kokoseij/git/alt/psiphon/psi_api.py",
+		"/home/kokoseij/git/alt/psiphon/psi_client.py",
+		"/home/kokoseij/git/rpg_remchan_daisuki/floor",
+		"/home/kokoseij/Downloads/pomo.py",
+		"/home/kokoseij/git/psiphon/server_list",
+		"/home/kokoseij/git/psiphon-circumvention-system/Server/psi_web.py",
+		"/home/kokoseij/git/psiphon-circumvention-system/Automation/psi_ops.py",
+		"/home/kokoseij/git/psiphon-circumvention-system/Server/psi_auth.py",
+		"/home/kokoseij/git/pyclient/pyclient/psi_client.py",
+		"/home/kokoseij/git/pyclient/pyclient/psi_ssh_connection.py",
+		"/home/kokoseij/git/pyclient/pyclient/psi_api.py",
+		"/home/kokoseij/git/RHYTHMATICA/objclass.py",
+		"/home/kokoseij/git/psiphon/.gitignore",
+		"/home/kokoseij/drive_d/Projects/mungalmod_4/convert_poemword.py",
+		"/home/kokoseij/test.py.py",
+		"/home/kokoseij/drive_d/Programming_Archive/modfolder/script-poemgame_y.rpy",
+		"/home/kokoseij/git/kksj_userbot/modules/alive.py",
+		"/home/kokoseij/git/kksj_userbot/modules/ping.py",
+		"/home/kokoseij/git/gifted_project_ransomware/main.py",
+		"/home/kokoseij/git/kksj_userbot/test.py",
+		"/home/kokoseij/git/kksj_userbot/modules/update.py",
+		"/home/kokoseij/git/kksj_userbot/modules/test_rename.py",
+		"/home/kokoseij/git/kksj_userbot/.gitignore",
+		"/home/kokoseij/git/kksj_userbot/modules/change_test.py",
+		"/home/kokoseij/git/kksj_userbot/modules/test.py",
+		"/home/kokoseij/git/nalgalsearcher/nalgalsearch.py",
+		"/home/kokoseij/drive_d/markipiler_the_heist_all_endings",
+		"/home/kokoseij/git/KKSJusrbot/untitled.py",
+		"/run/media/kokoseij/KOKOSEI J/sosu.py",
+		"/home/kokoseij/git/darling/src/external/adv_cmds/stty/extern.h",
+		"/home/kokoseij/git/ych_python/Game/tic tac toe.py",
+		"/home/kokoseij/drive_d/Projects/리드메티카/BpmBasedNoteMaker/BBNM.py",
+		"/home/kokoseij/git/RHYTHMATICA_BBNM/untitled.py",
+		"/home/kokoseij/git/RHYTHMATICA/test.py",
+		"/home/kokoseij/git/RHYTHMATICA/.gitignore",
+		"/home/kokoseij/git/RGX-4.0-Python/main.py",
+		"/home/kokoseij/git/psiphon/psi_client.py",
+		"/home/kokoseij/git/RHYTHMATICA/note/Flamingo/info.txt",
+		"/home/kokoseij/drive_d/에이급 2-2 B-A A",
+		"/home/kokoseij/Desktop/asdf.desktop"
+	],
+	"find":
+	{
+		"height": 33.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "game_new.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 529,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								96,
+								96
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 1,
+					"file": "game.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 24015,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								990,
+								990
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 504.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "function.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 10768,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "objclass.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5467,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 33.0
+	},
+	"input":
+	{
+		"height": 164.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			0.5,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 162.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "RHYTHMATICA.sublime-project",
+	"replace":
+	{
+		"height": 62.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"",
+				"~/git/RHYTHMATICA/function.py"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"",
+				"~/git/IMC/rpg_remchan_daisuki/backend.sublime-workspace"
+			]
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 224.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
