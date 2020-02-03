@@ -14,7 +14,7 @@
 #You should have received a copy of the GNU General Public License
 #along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import pygame
-from function import *
+from function_old import *
 class intro_electron:
     def __init__(self, img, loc_x, loc_y, size):
         self.img = img

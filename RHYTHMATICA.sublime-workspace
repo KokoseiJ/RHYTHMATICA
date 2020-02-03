@@ -108,16 +108,16 @@
 	"buffers":
 	[
 		{
-			"file": "game_new.py",
+			"file": "module.py",
 			"settings":
 			{
-				"buffer_size": 529,
+				"buffer_size": 144,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "game.py",
+			"file": "game_old.py",
 			"settings":
 			{
 				"buffer_size": 24015,
@@ -125,7 +125,7 @@
 			}
 		},
 		{
-			"file": "function.py",
+			"file": "function_old.py",
 			"settings":
 			{
 				"buffer_size": 10768,
@@ -133,7 +133,7 @@
 			}
 		},
 		{
-			"file": "objclass.py",
+			"file": "objclass_old.py",
 			"settings":
 			{
 				"buffer_size": 5467,
@@ -267,10 +267,13 @@
 	[
 		"/home/kokoseij/git/RHYTHMATICA",
 		"/home/kokoseij/git/RHYTHMATICA/res",
-		"/home/kokoseij/git/RHYTHMATICA/res/image"
+		"/home/kokoseij/git/RHYTHMATICA/res/fonts",
+		"/home/kokoseij/git/RHYTHMATICA/res/image",
+		"/home/kokoseij/git/RHYTHMATICA/res/sound"
 	],
 	"file_history":
 	[
+		"/home/kokoseij/git/RHYTHMATICA/game_new.py",
 		"/home/kokoseij/git/RHYTHMATICA/function.py",
 		"/home/kokoseij/git/RHYTHMATICA/game.py",
 		"/home/kokoseij/git/IMC/rpg_remchan_daisuki/test_old.py",
@@ -360,6 +363,9 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"image['",
+			"image",
+			"outside"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -377,24 +383,29 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"sheets":
+			[
+			]
+		},
+		{
+			"selected": 1,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "game_new.py",
+					"file": "module.py",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 529,
+						"buffer_size": 144,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								96,
-								96
+								144,
+								144
 							]
 						],
 						"settings":
@@ -405,18 +416,12 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 1,
 					"type": "text"
-				}
-			]
-		},
-		{
-			"selected": 0,
-			"sheets":
-			[
+				},
 				{
 					"buffer": 1,
-					"file": "game.py",
+					"file": "game_old.py",
 					"semi_transient": false,
 					"settings":
 					{
@@ -427,8 +432,8 @@
 						"selection":
 						[
 							[
-								990,
-								990
+								937,
+								937
 							]
 						],
 						"settings":
@@ -438,15 +443,15 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 504.0,
+						"translation.y": 7992.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
 					"buffer": 2,
-					"file": "function.py",
+					"file": "function_old.py",
 					"semi_transient": false,
 					"settings":
 					{
@@ -468,15 +473,15 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 432.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 2,
 					"type": "text"
 				},
 				{
 					"buffer": 3,
-					"file": "objclass.py",
+					"file": "objclass_old.py",
 					"semi_transient": false,
 					"settings":
 					{
@@ -501,7 +506,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 3,
 					"type": "text"
 				}
 			]
@@ -547,7 +552,7 @@
 	"menu_visible": true,
 	"output.exec":
 	{
-		"height": 162.0
+		"height": 154.0
 	},
 	"output.find_results":
 	{

@@ -16,8 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 '''
 #####Import Modules#####
-from function import *
-from objclass import *
+from function_old import *
+from objclass_old import *
 import pygame
 from pygame.locals import *
 from random import randint
