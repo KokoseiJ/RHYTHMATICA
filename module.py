@@ -77,9 +77,9 @@ def blit_center(screen, surf, loc, anchor = (0.5, 0.5)):
     newloc = []
     for _loc, _surfsize, _scrsize, _anchor in zip(loc, surfsize, scrsize, anchor):
         if _loc > 1:
-            newloc.append(_loc - _surfsize * (1 - _anchor))
+            newloc.append(_loc - _surfsize * _anchor)
         else:
-            newloc.append(_scrsize * _loc - _surfsize * (1 - _anchor))
+            newloc.append(_scrsize * _loc - _surfsize * _anchor)
     return screen.blit(surf, newloc)
 
 def font_render(font, text, antialias = 10, color = BLACK, background = None):
@@ -93,7 +93,7 @@ def font_render(font, text, antialias = 10, color = BLACK, background = None):
         rtnsurf = pygame.Surface((width, height), flags = pygame.SRCALPHA)
     ypos = 0
     for x in text_list:
-        blit_center(rtnsurf, x, (0.5, ypos), (0.5, 1))
+        blit_center(rtnsurf, x, (0.5, ypos), (0.5, 0))
         ypos += x.get_height()
     return rtnsurf
 

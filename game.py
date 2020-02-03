@@ -46,10 +46,13 @@ while True:
 
     blit_center(screen, img['logo'], (0.5, 0.5))
     
-    text = font_render(font['bold'], "Press N to Start")
-    blit_center(screen, text, (0.5, 0.75))
+    starttext = font_render(font['bold'], "Press N to Start")
+    blit_center(screen, starttext, (0.5, 0.75))
 
-    update(display, screen, FPSrender(rolex, font['black']))
+    vertext = font_render(font['bold'], "Ver: " + version)
+    blit_center(screen, vertext, (1, 1), (1, 1))
+
+    update(display, screen, FPSrender(rolex, font['regular']))
     rolex.tick(60)
 
     for event in pygame.event.get():
