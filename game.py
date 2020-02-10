@@ -1,10 +1,10 @@
 import os
 import pygame
 from pygame.locals import *
+from os import listdir, scandir
+from os.path import abspath, dirname, join
 
 from module import *
-
-version = "A6P"
 
 # TODO: load mixer buffer, screen size, etc from the config file.
 
@@ -16,7 +16,7 @@ pygame.init()
 
 # set it's size, flags, caption.
 display = pygame.display.set_mode(size = (1280, 720))#, flags = pygame.FULLSCREEN)
-screen = pygame.Surface(display.get_size())
+screen = pygame.Surface((1920, 1080))
 pygame.display.set_caption("RHYTHMATICA")
 
 # get a new clock. is it a real Rolex? damn, that's cool.
@@ -31,35 +31,6 @@ print("Program Path is:", basepath)
 
 # Load the resources.
 
-img, sound, font = load_resource(basepath, screen.get_size())
+res = load_resource(basepath, screen.get_size())
 
-# let's go to intro sequence
-
-electrons = [electron(img['inside'], screen.get_size()) for x in range(10)]
-
-sound["main"].play()
-
-while True:
-    screen.fill((WHITE))
-    for x in electrons:
-        x.get(screen)
-
-    blit_center(screen, img['logo'], (0.5, 0.5))
-    
-    starttext = font_render(font['bold'], "Press N to Start")
-    blit_center(screen, starttext, (0.5, 0.75))
-
-    vertext = font_render(font['bold'], "Ver: " + version)
-    blit_center(screen, vertext, (1, 1), (1, 1))
-
-    update(display, screen, FPSrender(rolex, font['regular']))
-    rolex.tick(60)
-
-    for event in pygame.event.get():
-        if event.type == QUIT:
-            exit()
-        elif event.type == KEYDOWN:
-            if event.key == K_n:
-                break
-    else:  continue
-    break
+main.intro(display, screen, rolex, res)
