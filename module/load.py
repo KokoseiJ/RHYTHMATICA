@@ -13,7 +13,7 @@ def load_sound(filepath):
     """
     return pygame.mixer.Sound(AudioSegment.from_file(filepath).raw_data)
 
-def load_resource(basepath, scr_size):
+def load_resource(basepath):
     # TODO: all the resizing functions are just for testing. remaster all the imgs with photoshop.
     """
     Load the files from the given path.
@@ -39,15 +39,15 @@ def load_resource(basepath, scr_size):
                     break
             else:
                 img[filename] = [load_image(x.path).convert_alpha() for x in scandir(folderpath)]
+                print("Done.")
                 continue
             # if not, load it as a dict
             img[filename] = dict([(x.name.split(".")[0], load_image(x.path).convert_alpha()) for x in scandir(folderpath)])
         else:
             img[filename] = load_image(file.path).convert_alpha()
         print("Done.")
-    img['logo'] = resize_width(img['logo'], scr_size[0])
+    img['logo'] = resize_width(img['logo'], 1500)
     img['logo'] = resize(img['logo'], 0.8)
-    img['loading'] = pygame.transform.scale(img['loading'], scr_size)
 
     ### Loading sound ###
     print("\nLoading Sound files...\n")

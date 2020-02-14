@@ -4,7 +4,10 @@ from pygame.locals import *
 from os import listdir, scandir
 from os.path import abspath, dirname, join
 
-from module import *
+from module.load import *
+from module import main
+
+from module.const import *
 
 # TODO: load mixer buffer, screen size, etc from the config file.
 
@@ -22,15 +25,18 @@ pygame.display.set_caption("RHYTHMATICA")
 # get a new clock. is it a real Rolex? damn, that's cool.
 rolex = pygame.time.Clock()
 
+# All is well
+print("ligma")
+
 print("\n###################")
 print("# RHYTHMATICA " + version + " #")
 print("###################\n")
 
-basepath = dirname(abspath(__file__))
+basepath = os.path.dirname(os.path.abspath(__file__))
 print("Program Path is:", basepath)
 
 # Load the resources.
 
-res = load_resource(basepath, screen.get_size())
+res = load_resource(basepath)
 
 main.intro(display, screen, rolex, res)

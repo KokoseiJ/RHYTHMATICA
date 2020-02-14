@@ -1,10 +1,10 @@
 import pygame
 
-from module.transform import *
+from module.const import *
 
-def FPSrender(clock, font):
+def FPSrender(clock):
     fps = int(clock.get_fps())
-    return font_render(font, str(fps))
+    return pygame.font.Font(None, 100).render(str(fps), 0, BLACK)
 
 def update(display, screen, FPS = None):
     #TODO: make a letterbox option. It will gonna look shitty on non 16:9 screen such as my 16:10 one
