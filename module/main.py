@@ -11,7 +11,7 @@ from module.const import *
 def fadeout(display, screen, image, rolex, fps = 60, duration = 1.5):
     image = scale(image, screen.get_size()).convert()
     opacity = 0
-    tmpscreen = screen.copy()
+    # tmpscreen = screen.copy()
     for x in range(int(fps * duration)):
         screen.blit(tmpscreen, (0, 0))
         image.set_alpha(opacity)
@@ -32,7 +32,7 @@ def fadein(display, screen, tmpscreen, image, rolex, fps = 60, duration = 1.5):
         update(display, screen, FPSrender(rolex))
         rolex.tick(fps)
 
-def intro(display, screen, rolex, res):
+def intro(display, screen, rolex, res, basepath):
     # let's go to intro sequence
     img, sound, font = res
     electrons = [electron(img['inside'], screen.get_size()) for x in range(10)]

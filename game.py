@@ -39,4 +39,4 @@ print("Program Path is:", basepath)
 
 res = load_resource(basepath)
 
-main.intro(display, screen, rolex, res)
+main.intro(display, screen, rolex, res, basepath)

@@ -108,21 +108,34 @@
 	"buffers":
 	[
 		{
+			"contents": "import os\nimport pygame\nfrom pygame.locals import *\nfrom os import listdir, scandir\nfrom os.path import abspath, dirname, join\n\nfrom module.load import *\nfrom module import main\n\nfrom module.const import *\n\n# TODO: load mixer buffer, screen size, etc from the config file.\n\n### initialization process ###\n\n# Little Buffer, Less Delay!\npygame.mixer.pre_init(44100, -16, 2, 1024) \npygame.init()\n\n# set it's size, flags, caption.\ndisplay = pygame.display.set_mode(size = (1280, 720))#, flags = pygame.FULLSCREEN)\nscreen = pygame.Surface((1920, 1080))\npygame.display.set_caption(\"RHYTHMATICA\")\n\n# get a new clock. is it a real Rolex? damn, that's cool.\nrolex = pygame.time.Clock()\n\n# All is well\nprint(\"ligma\")\n\nprint(\"\\n###################\")\nprint(\"# RHYTHMATICA \" + version + \" #\")\nprint(\"###################\\n\")\n\nbasepath = os.path.dirname(os.path.abspath(__file__))\nprint(\"Program Path is:\", basepath)\n\n# Load the resources.\n\nres = load_resource(basepath)\n\nmain.intro(display, screen, rolex, res, basepath)",
 			"file": "game.py",
+			"file_size": 996,
+			"file_write_time": 132259647486053776,
 			"settings":
 			{
-				"buffer_size": 996,
-				"encoding": "UTF-8",
+				"buffer_size": 1006,
 				"line_ending": "Unix"
 			}
 		},
 		{
+			"contents": "import pygame\nfrom pygame.locals import *\nfrom pygame.transform import scale\n\nfrom module.transform import *\nfrom module.classes import *\nfrom module.misc import *\n\nfrom module.const import *\n\ndef fadeout(display, screen, image, rolex, fps = 60, duration = 1.5):\n    image = scale(image, screen.get_size()).convert()\n    opacity = 0\n    # tmpscreen = screen.copy()\n    for x in range(int(fps * duration)):\n        screen.blit(tmpscreen, (0, 0))\n        image.set_alpha(opacity)\n        screen.blit(image, (0, 0))\n        opacity += (255 / (fps * duration))\n        update(display, screen, FPSrender(rolex))\n        rolex.tick(fps)\n\ndef fadein(display, screen, tmpscreen, image, rolex, fps = 60, duration = 1.5):\n    image = scale(image, screen.get_size()).convert()\n    opacity = 255\n    for x in range(int(fps * duration)):\n        screen.blit(tmpscreen, (0, 0))\n        tmpimage = image.copy()\n        tmpimage.set_alpha(opacity)\n        screen.blit(tmpimage, (0, 0))\n        opacity -= (255 / (fps * duration))\n        update(display, screen, FPSrender(rolex))\n        rolex.tick(fps)\n\ndef intro(display, screen, rolex, res, basepath):\n    # let's go to intro sequence\n    img, sound, font = res\n    electrons = [electron(img['inside'], screen.get_size()) for x in range(10)]\n\n    sound[\"main\"].play()\n\n    while True:\n        screen.fill((WHITE))\n        for x in electrons:\n            x.get(screen)\n\n        blit_center(screen, img['logo'], (0.5, 0.5))\n    \n        starttext = font_render(font['bold'], \"Press N to Start\")\n        blit_center(screen, starttext, (0.5, 0.75))\n\n        vertext = font_render(font['bold'], \"Ver: \" + version)\n        blit_center(screen, vertext, (1, 1), (1, 1))\n\n        update(display, screen, FPSrender(rolex))\n        rolex.tick(60)\n\n        for event in pygame.event.get():\n            if event.type == QUIT:\n                exit()\n            elif event.type == KEYDOWN:\n                if event.key == K_n:\n                    sound['main'].stop()\n                    sound['start'].play()\n                    tmpscreen = screen.copy()\n                    fadeout(display, screen, img['loading'], rolex)\n                    fadein(display, screen, tmpscreen, img['loading'], rolex)\n                    return",
 			"file": "module/main.py",
+			"file_size": 2239,
+			"file_write_time": 132259928569514404,
 			"settings":
 			{
-				"buffer_size": 2239,
-				"encoding": "UTF-8",
+				"buffer_size": 2251,
 				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "리소스 불러오기:\n\t\n1. 리소스 불러오기\n2. ",
+			"settings":
+			{
+				"buffer_size": 27,
+				"line_ending": "Unix",
+				"name": "리소스 불러오기:"
 			}
 		},
 		{
@@ -130,15 +143,6 @@
 			"settings":
 			{
 				"buffer_size": 0,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "module/const.py",
-			"settings":
-			{
-				"buffer_size": 57,
-				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
 		},
@@ -152,11 +156,22 @@
 			}
 		},
 		{
-			"file": "module/load.py",
+			"file": "module/const.py",
 			"settings":
 			{
-				"buffer_size": 2656,
+				"buffer_size": 57,
 				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "import pygame\nfrom pydub import AudioSegment\nfrom pygame.image import load as load_image\nfrom os import listdir, scandir\nfrom os.path import abspath, dirname, join\n\nfrom module.transform import *\n\ndef load_sound(filepath):\n    \"\"\"\n    Load a sound file using pydub, get raw data of it, load it using pygame.\n    It's a hack to load mp3 file in pygame\n    \"\"\"\n    return pygame.mixer.Sound(AudioSegment.from_file(filepath).raw_data)\n\ndef load_resource(basepath):\n    # TODO: all the resizing functions are just for testing. remaster all the imgs with photoshop.\n    \"\"\"\n    Load the files from the given path.\n    Maybe can be used for loading a custom theme\n    \"\"\"\n\n    ### Loading Images ###\n    print(\"\\nLoading Images...\\n\")\n    imgpath = join(basepath, \"res\", \"image\")\n    img = {}\n\n    for file in scandir(imgpath):\n        # load it as a list/dict if it's a folder, else just load it as a single image\n        filename = file.name.split(\".\")[0]\n        print(\"Loading \" + filename  + \"... \", end = \"\")\n        if file.is_dir():\n            folderpath = file.path\n            for name in [x.name.split(\".\")[0] for x in scandir(folderpath)]:\n                # check if every file name is a number\n                try:\n                    int(name)\n                except:\n                    break\n            else:\n                img[filename] = [load_image(x.path).convert_alpha() for x in scandir(folderpath)]\n                print(\"Done.\")\n                continue\n            # if not, load it as a dict\n            img[filename] = dict([(x.name.split(\".\")[0], load_image(x.path).convert_alpha()) for x in scandir(folderpath)])\n        else:\n            img[filename] = load_image(file.path).convert_alpha()\n        print(\"Done.\")\n    img['logo'] = resize_width(img['logo'], 1500)\n    img['logo'] = resize(img['logo'], 0.8)\n\n    ### Loading sound ###\n    print(\"\\nLoading Sound files...\\n\")\n    soundpath = join(basepath, \"res\", \"sound\")\n    \n    sound = {}\n    \n    # Loading files as a dict based on its filename, but also printing all the files that are loaded\n    for x in listdir(soundpath):\n        print(\"Loading \" + x.split('.')[0] + \" sound... \", end = \"\")\n        sound[x.split(\".\")[0]] = load_sound(join(soundpath, x))\n        print(\"Done.\")\n    \n    ### Loading fonts ###\n    print(\"\\nLoading Fonts...\", end = \"\")\n    fontpath = join(basepath, \"res\", \"fonts\")\n    \n    # Loading files as a dict based on its filename\n    font = dict([[x.split(\".\")[0], pygame.font.Font(join(fontpath, x), 70)] for x in listdir(fontpath) if x.split(\".\")[-1] == \"ttf\"])\n    print(\"Done.\\n\")\n    print(\"Finished loading.\")\n\n    return (img, sound, font)\n\ndef load_pack(basepath):\n    path = join(basepath, \"soundpack\")\n    for note in [x for x in scandir(basepath) if x.is_dir()]:\n\n\ndef parse_note(note):\n    pass",
+			"file": "module/load.py",
+			"file_size": 2656,
+			"file_write_time": 132259647890291452,
+			"settings":
+			{
+				"buffer_size": 2816,
 				"line_ending": "Unix"
 			}
 		},
@@ -170,11 +185,13 @@
 			}
 		},
 		{
+			"contents": "import random\n\nfrom module.transform import *\n\nclass electron:\n    def __init__(self, img, scrsize):\n        self.scrsize = scrsize\n        self.img = random.choice(img)\n        self.orig_img = self.img.copy()\n        self.loc = [random.randrange(0, x) for x in scrsize]\n        self.speed = [random.randrange(-20, 20) / 10 for x in range(2)]\n        #self.speed = (0, 0)\n        self.status = True\n        self.count = 0\n\n    def get(self, screen):\n        \"\"\"\n        blit the image to the screen, move it with the speed variable, increase its size\n        \"\"\"\n        blit_center(screen, self.img, [int(x) for x in self.loc])\n        temploc = [x + y for x, y in zip(self.loc, self.speed)]\n        for x in range(2):\n            if not 0 <= temploc[x] <= self.scrsize[x]:\n                if temploc[x] < 0:\n                    temploc[x] = 0\n                elif temploc[x] > self.scrsize[x]:\n                    temploc[x] = self.scrsize[x]\n                self.speed[x] *= -1\n        self.loc = temploc\n        # Song's BPM is 130\n        if self.count >= 60 / (130) * 60:\n            if self.status:\n                size = 0.7\n            else:\n                size = 0.8\n            self.status = not self.status\n            self.img = resize(self.orig_img, size)\n            self.count = 0\n        else:\n            self.count += 1\n\nclass ",
 			"file": "module/classes.py",
+			"file_size": 1339,
+			"file_write_time": 132258364561674089,
 			"settings":
 			{
-				"buffer_size": 1339,
-				"encoding": "UTF-8",
+				"buffer_size": 1347,
 				"line_ending": "Unix"
 			}
 		},
@@ -255,6 +272,14 @@
 		"selected_items":
 		[
 			[
+				"toggle",
+				"View: Toggle Menu"
+			],
+			[
+				"insta",
+				"Package Control: Install Package"
+			],
+			[
 				"install ",
 				"Package Control: Install Package"
 			],
@@ -285,10 +310,6 @@
 			[
 				"discord",
 				"Discord Rich Presence: Disconnect"
-			],
-			[
-				"insta",
-				"Package Control: Install Package"
 			],
 			[
 				"a",
@@ -363,6 +384,7 @@
 	],
 	"file_history":
 	[
+		"/home/kokoseij/Desktop/SYSCONF",
 		"/run/media/kokoseij/3736-3639/keys.bin",
 		"/home/kokoseij/git/RHYTHMATICA/module/__init__.py",
 		"/home/kokoseij/git/RHYTHMATICA/module/misc.py",
@@ -444,7 +466,7 @@
 	],
 	"find":
 	{
-		"height": 30.0
+		"height": 37.0
 	},
 	"find_in_files":
 	{
@@ -483,7 +505,7 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 2,
 			"sheets":
 			[
 				{
@@ -492,15 +514,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 996,
+						"buffer_size": 1006,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								956,
-								956
+								995,
+								995
 							]
 						],
 						"settings":
@@ -510,10 +532,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 105.0,
+						"translation.y": 606.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 2,
 					"type": "text"
 				},
 				{
@@ -522,15 +544,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2239,
+						"buffer_size": 2251,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2239,
-								2239
+								894,
+								894
 							]
 						],
 						"settings":
@@ -540,14 +562,48 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 741.0,
+						"translation.y": 756.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
 					"buffer": 2,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 27,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								11,
+								11
+							]
+						],
+						"settings":
+						{
+							"auto_name": "리소스 불러오기:",
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 3,
 					"file": "module/__init__.py",
 					"semi_transient": false,
 					"settings":
@@ -571,41 +627,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 8,
-					"type": "text"
-				}
-			]
-		},
-		{
-			"selected": 6,
-			"sheets":
-			[
-				{
-					"buffer": 3,
-					"file": "module/const.py",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 57,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								46,
-								46
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 9,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
@@ -635,24 +657,52 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 8,
 					"type": "text"
 				},
 				{
 					"buffer": 5,
-					"file": "module/load.py",
+					"file": "module/const.py",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2656,
+						"buffer_size": 57,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1790,
-								1790
+								46,
+								46
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 11,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "module/load.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2816,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2721,
+								2721
 							]
 						],
 						"settings":
@@ -662,14 +712,14 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 1893.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 5,
 					"type": "text"
 				},
 				{
-					"buffer": 6,
+					"buffer": 7,
 					"file": "module/transform.py",
 					"semi_transient": false,
 					"settings":
@@ -699,20 +749,20 @@
 					"type": "text"
 				},
 				{
-					"buffer": 7,
+					"buffer": 8,
 					"file": "module/classes.py",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1339,
+						"buffer_size": 1347,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								146,
-								146
+								1347,
+								1347
 							]
 						],
 						"settings":
@@ -722,14 +772,14 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 840.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 10,
+					"stack_index": 7,
 					"type": "text"
 				},
 				{
-					"buffer": 8,
+					"buffer": 9,
 					"file": "game_old.py",
 					"semi_transient": false,
 					"settings":
@@ -752,14 +802,14 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 2163.0,
+						"translation.y": 1515.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 10,
 					"type": "text"
 				},
 				{
-					"buffer": 9,
+					"buffer": 10,
 					"file": "function_old.py",
 					"semi_transient": false,
 					"settings":
@@ -782,14 +832,14 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 301.0,
+						"translation.y": 307.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 9,
 					"type": "text"
 				},
 				{
-					"buffer": 10,
+					"buffer": 11,
 					"file": "objclass_old.py",
 					"semi_transient": false,
 					"settings":
@@ -815,7 +865,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
+					"stack_index": 4,
 					"type": "text"
 				}
 			]
@@ -823,7 +873,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 30.0
+		"height": 37.0
 	},
 	"input":
 	{
@@ -849,7 +899,7 @@
 		"cols":
 		[
 			0.0,
-			0.5,
+			0.421793919689,
 			1.0
 		],
 		"rows":
@@ -871,7 +921,7 @@
 	"project": "RHYTHMATICA.sublime-project",
 	"replace":
 	{
-		"height": 56.0
+		"height": 70.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -895,7 +945,7 @@
 		[
 			[
 				"",
-				"~/git/IMC/rpg_remchan_daisuki/backend.sublime-workspace"
+				"~/git/cliplaylistplayer/cplp.sublime-project"
 			]
 		],
 		"width": 380.0
