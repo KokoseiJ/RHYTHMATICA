@@ -61,21 +61,24 @@ class Game:
         logger.debug("Clock is up and running!")
 
     def set_scene(self, scene):
-        if not isinstance(scene, Scene):
+        if issubclass(scene, Scene):
+            logger.debug("Subclass %s detected, creating instance", scene.name)
             scene = scene()
-        elif not issubclass(scene, Scene):
+
+        elif not isinstance(scene, Scene):
             raise TypeError(f"scene {scene.__code__.c_name} is not Scene!")
 
         if self.scene is not None:
             logger.debug("Calling cleanup on Scene %s", self.scene)
             self.scene.cleanup()
 
-        name = scene.name
-        logger.debug("Registering %s as a scene", name)
+        logger.debug("Registering %s as a scene", scene.name)
         self.scene = scene
         self.scene.set_game(self)
+
         logger.debug("Scene registered, Calling start")
         self.scene.start()
+
         logger.debug("Scene started")
 
     def add_task(self, task, args=None, kwargs=None):
