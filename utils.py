@@ -3,22 +3,6 @@ import pygame
 import random
 
 
-def scale_rel(surface, factor, maxsize=None, func=None):
-    if maxsize is None:
-        maxsize = pygame.display.get_window_size()
-    if func is None:
-        func = pygame.transform.smoothscale
-
-    if factor > 1:
-        factor /= 100
-
-    w, h = surface.get_size()
-    newh = maxsize[1] * factor
-    neww = maxsize[1] / h * w * factor
-
-    return func(surface, (neww, newh))
-
-
 def calc_size_rel(full_y, size, factor):
     if factor > 1:
         factor /= 100
@@ -28,6 +12,20 @@ def calc_size_rel(full_y, size, factor):
     neww = full_y / h * w * factor
 
     return (neww, newh)
+
+
+def scale_rel(surface, factor, maxsize=None, func=None):
+    if maxsize is None:
+        maxsize = pygame.display.get_window_size()
+    if func is None:
+        func = pygame.transform.smoothscale
+
+    if factor > 1:
+        factor /= 100
+
+    newsize = calc_size_rel(maxsize[1], surface.get_size(), factor)
+
+    return func(surface, newsize)
 
 
 def blit_center(dest, src, loc, *args, **kwargs):
