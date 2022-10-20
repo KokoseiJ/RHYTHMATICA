@@ -39,6 +39,7 @@ class TransitionableScene(Scene):
 
     def fade_task(self, game, surface, fadein=True, callback=None,
                   start_time=None, duration=None):
+        self.fade_ongoing.set()
         if start_time is None:
             start_time = time.perf_counter()
         if duration is None:
