@@ -19,7 +19,7 @@ class Intro(TransitionableScene):
     def __init__(self, interval=None):
         super().__init__()
 
-        self.interval = interval if interval else 1 / 130 * 60
+        self.interval = interval if interval else 1 / 130 * 60 / 2
         self.min_size = 100
         self.max_size = 200
         self.size_increment = 0.1
