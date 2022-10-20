@@ -110,8 +110,8 @@ def blit_center_rel(dest, src, factors, center=(0.5, 0.5), *args, **kwargs):
     return blit_center(dest, src, loc_rel, center, *args, **kwargs)
 
 
-def text_multiline(font, text, *args, **kwargs):
-    renders = [font.render(line.strip(), *args, **kwargs).convert_alpha()
+def text_multiline(font, text, *args, background=None, **kwargs):
+    renders = [font.render(line.strip(), *args, **kwargs)
                for line in text.split("\n")]
 
     sizes = [render.get_size() for render in renders]
@@ -119,6 +119,13 @@ def text_multiline(font, text, *args, **kwargs):
     total_h = sum([size[1] for size in sizes])
 
     surface = pygame.Surface((total_w, total_h), pygame.SRCALPHA)
+    if background:
+        if not isinstance(background, pygame.Color):
+            background = pygame.Color(background)
+
+        background.a = 128
+
+        surface.fill(background)
 
     y = 0
 

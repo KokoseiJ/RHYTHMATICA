@@ -49,7 +49,7 @@ class SongPack:
             self.game.fonts['regular'],
             f"{self.name}\nArtist: {self.artist}\n"
             f"BPM: {self.bpm}\nDifficulty: {self.difficulty}",
-            True, "black", None
+            True, "black", background="grey"
         )
 
         self.guide = scale_rel(text_multiline(
