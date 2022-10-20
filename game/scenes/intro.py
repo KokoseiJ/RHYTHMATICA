@@ -68,6 +68,9 @@ class Intro(TransitionableScene):
         pygame.mixer.music.play()
 
     def handle_event(self, event):
+        if self.fade_ongoing.is_set:
+            return
+
         if event.type == pygame.KEYDOWN and event.key == pygame.K_n:
             pygame.mixer.music.stop()
             pygame.mixer.music.load(os.path.join("res", "sound", "start.mp3"))
