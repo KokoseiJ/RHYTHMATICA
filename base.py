@@ -46,18 +46,10 @@ class TransitionableScene(Scene):
 
         elapsed_time = time.perf_counter() - start_time
 
-        if elapsed_time > duration:
-            logger.debug("Fade task ended")
-            self.fade_ongoing.clear()
-            logger.debug(callback)
-            if callable(callback):
-                logger.debug("Callback found, calling")
-                callback(self)
-            return
-
         target = 255 * (-1 if fadein else 1)
 
-        opacity = round(target / duration * elapsed_time)
+        opacity = 255 if fadein else 0
+        opacity += round(target / duration * elapsed_time)
 
         logger.debug("t: %f, a: %d", elapsed_time, opacity)
 
@@ -67,6 +59,15 @@ class TransitionableScene(Scene):
         if self.fade_bg is not None:
             game.screen.blit(self.fade_bg, (0, 0))
         game.screen.blit(surface_copy, (0, 0))
+
+        if elapsed_time > duration:
+            logger.debug("Fade task ended")
+            self.fade_ongoing.clear()
+            logger.debug(callback)
+            if callable(callback):
+                logger.debug("Callback found, calling")
+                callback(self)
+            return
 
         game.add_task(self.fade_task, (
             surface, fadein, callback, start_time, duration))
