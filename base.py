@@ -33,13 +33,12 @@ class Scene:
 
 class TransitionableScene(Scene):
     def __init__(self):
-        self.surface = None
-
+        self.fade_bg = None
         self.fade_ongoing = Event()
         self.fade_duration = 1
 
-    def fade_task(self, game, surface, fadein=True, start_time=None,
-                  duration=None, callback=None):
+    def fade_task(self, game, surface, fadein=True, callback=None,
+                  start_time=None, duration=None):
         if start_time is None:
             start_time = time.perf_counter()
         if duration is None:
@@ -65,12 +64,12 @@ class TransitionableScene(Scene):
         surface_copy = surface.copy()
         surface_copy.set_alpha(opacity)
 
-        if self.surface is not None:
-            game.screen.blit(self.surface, (0, 0))
+        if self.fade_bg is not None:
+            game.screen.blit(self.fade_bg, (0, 0))
         game.screen.blit(surface_copy, (0, 0))
 
         game.add_task(self.fade_task, (
-            surface, fadein, start_time, duration, callback))
+            surface, fadein, callback, start_time, duration))
 
 
 class Game:

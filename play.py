@@ -1,10 +1,8 @@
 import pygame
 
-from base import Scene
+from base import TransitionableScene
 from utils import blit_center_rel
 
-import time
-import random
 import logging
 from math import floor
 
@@ -54,11 +52,12 @@ class CircleEdge(Circle):
             surface, self.color, self.loc, radius, self.edge)
 
 
-class Play(Scene):
+class Play(TransitionableScene):
     KEYS = ["t", "y", "g", "h", "b", "n"]
 
-    def __init__(self):
+    def __init__(self, fadein_surface=None):
         super().__init__()
+
         self.surface = None
         self.edges = None
         self.key_status = [
@@ -66,6 +65,8 @@ class Play(Scene):
             False, False,
             False, False
         ]
+
+        self.fadein_surface = fadein_surface
 
     def start(self):
         screen_size = self.game.screen.get_size()
@@ -76,6 +77,9 @@ class Play(Scene):
             Circle(n, screen_size).draw(self.surface)
 
         self.edges = [CircleEdge(n, screen_size) for n in range(6)]
+
+        if self.fadein_surface is not None:
+            self.game.add_task(self.fade_task, (self.fadein_surface, True))
 
     def handle_event(self, event):
         if event.type == pygame.KEYDOWN or event.type == pygame.KEYUP:

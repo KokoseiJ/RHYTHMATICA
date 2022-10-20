@@ -49,13 +49,13 @@ class Intro(TransitionableScene):
 
     def handle_event(self, event):
         if event.type == pygame.KEYDOWN and event.key == pygame.K_n:
-            self.game.add_task(self.fade_task, (self.fadeout_surface, False), {
-                "callback": self.fadeout_callback
-            })
+            self.game.add_task(self.fade_task, (
+                self.fadeout_surface, False, self.fadeout_callback))
 
     def fadeout_callback(self, _):
         logger.info("Intro fadeout finished, starting Play Scene")
-        self.game.set_scene(Play)
+        next_scene = Play(self.fadeout_surface)
+        self.game.set_scene(next_scene)
 
     def task(self):
         if time.perf_counter() > self.next_time:
