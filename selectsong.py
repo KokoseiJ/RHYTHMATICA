@@ -33,9 +33,11 @@ class SongPack:
         else:
             self.difficulty = "EXTREME"
 
-        self.img_big = scale_rel(self.img, 1, self.game.screen.get_size())
+        fullsize = self.game.screen.get_size()
+
+        self.img_big = scale_rel(self.img, 1, fullsize)
         self.img_big.set_alpha(128)
-        self.img_small = scale_rel(self.img, 0.5, self.game.screen.get_size())
+        self.img_small = scale_rel(self.img, 0.5, fullsize)
 
         self.info = text_multiline(
             self.game.fonts['regular'],
@@ -43,8 +45,8 @@ class SongPack:
             f"BPM: {self.bpm}\nDifficulty: {self.difficulty}",
             True, "black", None
         )
-        info_x = (self.game.screen.get_size()[0] - self.info.get_size()[0]) / 2
-        info_y = self.game.screen.get_size()[1] / 2
+        info_x = (fullsize[0] - self.info.get_size()[0]) / 2
+        info_y = fullsize[1] / 2
         self.info_pos = (info_x, info_y)
 
         self.guide = scale_rel(text_multiline(
@@ -53,10 +55,10 @@ class SongPack:
             "Press G, H to change songs.\n"
             "Press N to start the game.",
             True, "black"
-        ), 1 / 9, self.game.screen.get_size())
+        ), 1 / 9, fullsize)
 
-        guide_x = (self.game.screen.get_size()[0] - self.guide.get_size()[0])/2
-        guide_y = self.game.screen.get_size()[1] - self.guide.get_size()[1]
+        guide_x = (fullsize[0] - self.guide.get_size()[0])/2
+        guide_y = fullsize[1] - self.guide.get_size()[1]
         self.guide_pos = (guide_x, guide_y)
 
     @classmethod
