@@ -1,6 +1,5 @@
-from base import Game
-from intro import Intro
-from selectsong import SongSelect
+from game.base import Game
+from game.scenes.intro import Intro
 
 import logging
 

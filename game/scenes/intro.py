@@ -1,8 +1,8 @@
 import pygame
 
-from selectsong import SongSelect
-from utils import get_random_color
-from base import TransitionableScene
+from .selectsong import SongSelect
+from ..utils import get_random_color
+from ..base import TransitionableScene
 
 import os
 import time

@@ -1,6 +1,6 @@
 import pygame
 
-from base import TransitionableScene
+from ..base import TransitionableScene
 
 import logging
 from math import floor
