@@ -160,6 +160,7 @@ class SongSelect(TransitionableScene):
         self.current_preview = None
 
         self.current_song = 0
+        self.speed = 1.00
 
         self.is_moving = Event()
 
@@ -197,7 +198,10 @@ class SongSelect(TransitionableScene):
             return
 
         if event.type == pygame.KEYDOWN:
-            if event.key in (pygame.K_g, pygame.K_h):
+            if event.key == pygame.K_q:
+                logger.warning("Q pressed, exiting")
+                self.game.stop()
+            elif event.key in (pygame.K_g, pygame.K_h):
                 def callback():
                     self.is_moving.clear()
                     self.play_preview()
@@ -217,8 +221,23 @@ class SongSelect(TransitionableScene):
 
                 pygame.mixer.music.play()
 
+            elif event.key == pygame.K_t and self.speed > 0.25:
+                self.speed -= 0.25
+            elif event.key == pygame.K_y and self.speed < 5:
+                self.speed += 0.25
+
     def task(self):
         if self.is_moving.is_set():
             self.game.screen.fill("white")
         else:
             self.songs[self.current_song].blit_full(self.game.screen)
+
+        speed = scale_rel(
+            self.game.fonts['regular'].render(
+                f"Speed: {str(self.speed).ljust(4, '0')}x",
+                True,
+                "black"
+            ), 1 / 18
+        )
+
+        blit_center_rel(self.game.screen, speed, (1, 1), (1, 1))
