@@ -83,12 +83,13 @@ class Play(Scene):
                 logger.info("q pressed, exiting the game")
                 self.game.stop()
 
-            elif pygame.key.name(event.key) in self.KEYS:
-                keyname = pygame.key.name(event.key)
+            keyname = pygame.key.name(event.key)
+            if keyname in self.KEYS:
                 keystatus = event.type == pygame.KEYDOWN
                 self.key_status[self.KEYS.index(keyname)] = keystatus
                 logger.debug(self.key_status)
 
     def task(self):
         self.game.screen.blit(self.surface, (0, 0))
-        [edge.draw(self.game.screen, self.key_status[n]) for n, edge in enumerate(self.edges)]
+        [edge.draw(self.game.screen, self.key_status[n])
+         for n, edge in enumerate(self.edges)]
