@@ -53,6 +53,7 @@ class CircleEdge(Circle):
 
 
 class Play(TransitionableScene):
+    name = "Play"
     KEYS = ["t", "y", "g", "h", "b", "n"]
 
     def __init__(self, fadein_surface=None):

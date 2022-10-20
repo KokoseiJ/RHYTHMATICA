@@ -13,6 +13,8 @@ logger = logging.getLogger("RHYTHMATICA")
 
 
 class Intro(TransitionableScene):
+    name = "Intro"
+
     def __init__(self, interval=None):
         super().__init__()
 
