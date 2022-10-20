@@ -1,7 +1,6 @@
 import pygame
 
 from base import TransitionableScene
-from utils import blit_center_rel
 
 import logging
 from math import floor
