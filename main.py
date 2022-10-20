@@ -1,5 +1,7 @@
 from game.base import Game
 from game.scenes.intro import Intro
+from game.scenes.selectsong import SongSelect
+from game.scenes.play import Play
 
 import logging
 
@@ -16,7 +18,7 @@ formatter = logging.Formatter(
 handler.setFormatter(formatter)
 logger.addHandler(handler)
 
-game = Game((1920, 1080), fps=60, show_fps=True)
+game = Game((1920, 1080), fps=0, show_fps=True)
 game.init_pygame()
 game.set_scene(Intro)
 game.run()

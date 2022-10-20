@@ -15,14 +15,15 @@ logger = logging.getLogger("RHYTHMATICA")
 
 
 class SongPack:
-    def __init__(
-            self, game, path, name, artist, bpm, notes, img, preview, music):
+    def __init__(self, game, path, name, artist, bpm, notes, notedata, img,
+                 preview, music):
         self.game = game
         self.path = path
         self.name = name
         self.artist = artist
         self.bpm = bpm
         self.notes = notes
+        self.notedata = notedata
         self.img = img.convert_alpha()
         self.preview = preview
         self.music = music
@@ -74,6 +75,8 @@ class SongPack:
                     logger.exception(
                         "Failed to load a song from %s.", folder_name)
                     return None
+            with open(os.path.join(path, "note.txt")) as f:
+                notedata = f.read()
 
             img = pygame.image.load(os.path.join(path, "img.png"))
             preview = pygame.mixer.Sound(os.path.join(path, "pre.wav"))
@@ -83,7 +86,8 @@ class SongPack:
             logger.exception("Failed to load from %s.", path)
             return None
 
-        return cls(game, path, name, artist, bpm, notes, img, preview, music)
+        return cls(game, path, name, artist, float(bpm), int(notes), notedata,
+                   img, preview, music)
 
     @classmethod
     def load_bulk(cls, game, path):
@@ -186,6 +190,10 @@ class SongSelect(TransitionableScene):
         if not self.songs:
             logger.error("No songs are found??? Exiting game...")
             self.game.stop()
+
+        if self.current_song >= len(self.songs):
+            logger.warning("current_song bigger than available songs!")
+            self.current_song = 0
 
         pygame.mixer.music.load(os.path.join("res", "sound", "nextsong.mp3"))
 
