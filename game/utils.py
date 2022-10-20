@@ -80,9 +80,9 @@ def calc_size_rel(full_y, size, factor):
     return (neww, newh)
 
 
-def calc_center(srcsize, loc):
+def calc_center(srcsize, loc, center=(0.5, 0.5)):
     w, h = srcsize
-    return (loc[0] - w / 2, loc[1] - h / 2)
+    return (loc[0] - w * center[0], loc[1] - h * center[1])
 
 
 def calc_loc_rel(full, factors):
@@ -100,13 +100,14 @@ def scale_rel(surface, factor, maxsize=None, func=None):
     return func(surface, newsize)
 
 
-def blit_center(dest, src, loc, *args, **kwargs):
-    return dest.blit(src, calc_center(src.get_size(), loc), *args, **kwargs)
+def blit_center(dest, src, loc, center=(0.5, 0.5), *args, **kwargs):
+    return dest.blit(
+        src, calc_center(src.get_size(), loc, center), *args, **kwargs)
 
 
-def blit_center_rel(dest, src, factors, *args, **kwargs):
+def blit_center_rel(dest, src, factors, center=(0.5, 0.5), *args, **kwargs):
     loc_rel = calc_loc_rel(dest.get_size(), factors)
-    return blit_center(dest, src, loc_rel, *args, **kwargs)
+    return blit_center(dest, src, loc_rel, center, *args, **kwargs)
 
 
 def text_multiline(font, text, *args, **kwargs):
