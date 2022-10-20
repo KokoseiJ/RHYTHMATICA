@@ -2,7 +2,7 @@ import pygame
 
 from .play import Circle
 from .selectsong import SongSelect
-from ..utils import get_random_color, scale_rel, blit_center_rel
+from ..utils import scale_rel, blit_center_rel
 from ..base import TransitionableScene
 
 import os

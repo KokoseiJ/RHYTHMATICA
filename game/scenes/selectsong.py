@@ -51,9 +51,6 @@ class SongPack:
             f"BPM: {self.bpm}\nDifficulty: {self.difficulty}",
             True, "black", None
         )
-        info_x = (fullsize[0] - self.info.get_size()[0]) / 2
-        info_y = fullsize[1] / 2
-        self.info_pos = (info_x, info_y)
 
         self.guide = scale_rel(text_multiline(
             self.game.fonts['bold'],
@@ -62,10 +59,6 @@ class SongPack:
             "Press N to start the game.",
             True, "black"
         ), 1 / 9, fullsize)
-
-        guide_x = (fullsize[0] - self.guide.get_size()[0]) / 2
-        guide_y = fullsize[1] - self.guide.get_size()[1]
-        self.guide_pos = (guide_x, guide_y)
 
     @classmethod
     def from_path(cls, game, path):
@@ -104,8 +97,8 @@ class SongPack:
 
         blit_center_rel(surface, self.img_big, (0.5, 0.5))
         blit_center_rel(surface, self.img_small, (0.5, 0.25))
-        surface.blit(self.info, self.info_pos)
-        surface.blit(self.guide, self.guide_pos)
+        blit_center_rel(surface, self.info, (0.5, 0.5), (0.5, 0))
+        blit_center_rel(surface, self.guide, (0.5, 1), (0.5, 1))
 
     def blit_small(self, surface, left=True):
         loc = (-0.1 if left else 1.1, 0.5)
@@ -127,8 +120,7 @@ class SongPack:
     def move_left(self, duration, callback=None):
         fullw, fullh = full = self.game.screen.get_size()
         srcsize = self.img_small.get_size()
-        orig = calc_center(srcsize, calc_loc_rel(full, (1, 0.5)))
-        orig = (fullw, orig[1])
+        orig = calc_center(srcsize, calc_loc_rel(full, (1, 0.5)), (0, 0.5))
         dest = calc_center(srcsize, calc_loc_rel(full, (0.5, 0.25)))
 
         self.move(orig, dest, duration, callback)
@@ -137,16 +129,14 @@ class SongPack:
         fullw, fullh = full = self.game.screen.get_size()
         srcsize = self.img_small.get_size()
         orig = calc_center(srcsize, calc_loc_rel(full, (0.5, 0.25)))
-        dest = calc_center(srcsize, calc_loc_rel(full, (0, 0.5)))
-        dest = (-srcsize[0], dest[1])
+        dest = calc_center(srcsize, calc_loc_rel(full, (0, 0.5)), (1, 0.5))
 
         self.move(orig, dest, duration, callback)
 
     def move_right(self, duration, callback=None):
         fullw, fullh = full = self.game.screen.get_size()
         srcsize = self.img_small.get_size()
-        orig = calc_center(srcsize, calc_loc_rel(full, (0, 0.5)))
-        orig = (-srcsize[0], orig[1])
+        orig = calc_center(srcsize, calc_loc_rel(full, (0, 0.5)), (1, 0.5))
         dest = calc_center(srcsize, calc_loc_rel(full, (0.5, 0.25)))
 
         self.move(orig, dest, duration, callback)
@@ -155,8 +145,7 @@ class SongPack:
         fullw, fullh = full = self.game.screen.get_size()
         srcsize = self.img_small.get_size()
         orig = calc_center(srcsize, calc_loc_rel(full, (0.5, 0.25)))
-        dest = calc_center(srcsize, calc_loc_rel(full, (1, 0.5)))
-        dest = (fullw, dest[1])
+        dest = calc_center(srcsize, calc_loc_rel(full, (1, 0.5)), (0, 0.5))
 
         self.move(orig, dest, duration, callback)
 
