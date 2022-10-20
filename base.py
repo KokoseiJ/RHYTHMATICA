@@ -107,21 +107,32 @@ class Game:
 
         self.load_fonts()
 
-    def load_fonts(self, folder=None):
+    def load_fonts(self, folder=None, target_height=None):
         if folder is None:
             folder = os.path.join("res", "fonts")
-        logger.info("Loading fonts from %s", folder)
 
-        for filename in [x for x in os.listdir(folder) if x.endswith(".ttf")]:
+        if target_height is None:
+            target_height = self.screen.get_size()[1] / 12
+
+        logger.info("Loading fonts from %s, target height: %f",
+                    folder, target_height)
+
+        files = [x for x in os.listdir(folder) if x.endswith(".ttf")]
+
+        font = pygame.font.Font(os.path.join(folder, files[0]), 100)
+        ratio = 100 / font.get_height()
+        size = round(ratio * target_height)
+        logger.debug("calculated ratio: %f size: %d", ratio, size)
+
+        for filename in files:
             file = os.path.join(folder, filename)
             name = filename.rsplit(".", 1)[0]
 
             logger.info("Loading font %s...", name)
-            self.fonts[name] = font = pygame.font.Font(file, 75)
+            self.fonts[name] = font = pygame.font.Font(file, size)
 
             h = font.get_height()
-            logger.debug("%s size: %d h: %f, ratio %f",
-                         name, 75, h, 75/h)
+            logger.debug("%s size: %d h: %f", name, size, h)
 
     def set_scene(self, scene):
         if not isinstance(scene, Scene):
