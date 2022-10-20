@@ -123,12 +123,14 @@ class Game:
                          name, 75, h, 75/h)
 
     def set_scene(self, scene):
-        if issubclass(scene, Scene):
-            logger.debug("Subclass %s detected, creating instance", scene.name)
-            scene = scene()
+        if not isinstance(scene, Scene):
+            if issubclass(scene, Scene):
+                logger.debug(
+                    "Subclass %s detected, creating instance", scene.name)
+                scene = scene()
 
-        elif not isinstance(scene, Scene):
-            raise TypeError(f"scene {scene.__code__.c_name} is not Scene!")
+            else:
+                raise TypeError(f"scene {scene.__code__.c_name} is not Scene!")
 
         if self.scene is not None:
             logger.debug("Calling cleanup on Scene %s", self.scene)
