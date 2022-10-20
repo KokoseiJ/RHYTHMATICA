@@ -1,5 +1,6 @@
 import pygame
 
+from .play import Play
 from ..base import TransitionableScene
 from ..utils import (
     SmoothMoveXY, calc_loc_rel, calc_center, scale_rel, blit_center_rel,
@@ -154,7 +155,7 @@ class SongSelect(TransitionableScene):
     def __init__(self, fadein_surface=None):
         super().__init__()
 
-        self.fadein_surface = fadein_surface
+        self.fade_surface = fadein_surface
 
         self.songs = []
         self.current_preview = None
@@ -188,20 +189,22 @@ class SongSelect(TransitionableScene):
 
         pygame.mixer.music.load(os.path.join("res", "sound", "nextsong.mp3"))
 
-        if self.fadein_surface is not None:
+        if self.fade_surface is not None:
             self.game.add_task(self.fade_task, (
-                self.fadein_surface, True, lambda _:  self.play_preview()
+                self.fade_surface, True, lambda _:  self.play_preview()
             ))
 
     def handle_event(self, event):
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_q:
+            logger.warning("Q pressed, exiting")
+            self.game.stop()
+            return
+
         if self.fade_ongoing.is_set() or self.is_moving.is_set():
             return
 
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_q:
-                logger.warning("Q pressed, exiting")
-                self.game.stop()
-            elif event.key in (pygame.K_g, pygame.K_h):
+            if event.key in (pygame.K_g, pygame.K_h):
                 def callback():
                     self.is_moving.clear()
                     self.play_preview()
@@ -223,8 +226,26 @@ class SongSelect(TransitionableScene):
 
             elif event.key == pygame.K_t and self.speed > 0.25:
                 self.speed -= 0.25
+
             elif event.key == pygame.K_y and self.speed < 5:
                 self.speed += 0.25
+
+            elif event.key == pygame.K_n:
+                self.current_preview.stop()
+                pygame.mixer.music.load(
+                    os.path.join("res", "sound", "start.mp3"))
+                pygame.mixer.music.play()
+                self.game.add_task(self.fade_task, (
+                    self.fade_surface, False, self.fadeout_callback))
+
+    def fadeout_callback(self, _):
+        logger.info("SongSelect fadeout finished, starting Play Scene")
+
+        song = self.songs[self.current_song]
+
+        logger.info("Song: %s, Speed: %f", song.name, self.speed)
+        next_scene = Play(song, self.speed, self, self.fade_surface)
+        self.game.set_scene(next_scene)
 
     def task(self):
         if self.is_moving.is_set():

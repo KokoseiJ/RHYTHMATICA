@@ -55,10 +55,15 @@ class Play(TransitionableScene):
     name = "Play"
     KEYS = ["t", "y", "g", "h", "b", "n"]
 
-    def __init__(self, fadein_surface=None):
+    def __init__(self, song, speed, prev_scene, fadein_surface=None):
         super().__init__()
 
-        self.surface = None
+        self.songdata = song
+        self.speed = speed
+        self.prev_scene = prev_scene
+        self.fadein_surface = fadein_surface
+
+        self.bg_surface = None
         self.edges = None
         self.key_status = [
             False, False,
@@ -66,15 +71,16 @@ class Play(TransitionableScene):
             False, False
         ]
 
-        self.fadein_surface = fadein_surface
-
     def start(self):
         screen_size = self.game.screen.get_size()
 
-        self.surface = pygame.Surface(screen_size)
-        self.surface.fill("orange")
+        self.bg_surface = pygame.Surface(screen_size)
+
+        self.bg_surface.fill("white")
+        self.bg_surface.blit(self.songdata.img_big, (0, 0))
+
         for n in range(6):
-            Circle(n, screen_size).draw(self.surface)
+            Circle(n, screen_size).draw(self.bg_surface)
 
         self.edges = [CircleEdge(n, screen_size) for n in range(6)]
 
@@ -94,6 +100,6 @@ class Play(TransitionableScene):
                 # logger.debug(self.key_status)
 
     def task(self):
-        self.game.screen.blit(self.surface, (0, 0))
+        self.game.screen.blit(self.bg_surface, (0, 0))
         [edge.draw(self.game.screen, self.key_status[n])
          for n, edge in enumerate(self.edges)]
