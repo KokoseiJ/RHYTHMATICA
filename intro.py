@@ -1,8 +1,10 @@
 import pygame
 
-from base import Scene
+from play import Play
 from utils import get_random_color
+from base import TransitionableScene
 
+import os
 import time
 import random
 import logging
@@ -10,7 +12,7 @@ import logging
 logger = logging.getLogger("RHYTHMATICA")
 
 
-class Intro(Scene):
+class Intro(TransitionableScene):
     def __init__(self, interval=None):
         super().__init__()
 
@@ -25,9 +27,16 @@ class Intro(Scene):
         self.next_time = 0
         self.big = True
 
+        self.fadeout_surface = None
+
     def start(self):
-        # loc, color, size_factor
         w, h = self.game.screen.get_size()
+
+        loadingpath = os.path.join("res", "image", "loading.png")
+        self.fadeout_surface = pygame.transform.smoothscale(
+            pygame.image.load(loadingpath), (w, h))
+
+        # loc, color, size_factor
         self.circles = [(
             (random.randrange(w), random.randrange(h)),
             get_random_color(),
@@ -37,6 +46,16 @@ class Intro(Scene):
 
         self.start_time = time.perf_counter()
         self.next_time = self.start_time + self.interval
+
+    def handle_event(self, event):
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_n:
+            self.game.add_task(self.fade_task, (self.fadeout_surface, False), {
+                "callback": self.fadeout_callback
+            })
+
+    def fadeout_callback(self, _):
+        logger.info("Intro fadeout finished, starting Play Scene")
+        self.game.set_scene(Play)
 
     def task(self):
         if time.perf_counter() > self.next_time:

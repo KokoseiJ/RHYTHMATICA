@@ -87,7 +87,7 @@ class Play(Scene):
             if keyname in self.KEYS:
                 keystatus = event.type == pygame.KEYDOWN
                 self.key_status[self.KEYS.index(keyname)] = keystatus
-                logger.debug(self.key_status)
+                # logger.debug(self.key_status)
 
     def task(self):
         self.game.screen.blit(self.surface, (0, 0))
