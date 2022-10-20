@@ -75,11 +75,15 @@ class TransitionableScene(Scene):
 
 
 class Game:
-    def __init__(self, size=None, name="RHYTHMATICA", fps=60, show_fps=False):
+    def __init__(self, size=None, name="RHYTHMATICA", fullscreen=False, fps=60, show_fps=False):
         self.size = size if size is not None else (1280, 720)
         self.name = name
         self.fps = fps
         self.show_fps = show_fps
+        self.flags = 0
+        if fullscreen:
+            self.flags = self.flags | pygame.FULLSCREEN
+
 
         logger.debug("size: %dx%d name: %s fps: %d", *size, name, fps)
 
@@ -99,7 +103,7 @@ class Game:
         logger.info("Initializing %s...", self.name)
         pygame.init()
 
-        self.screen = pygame.display.set_mode(self.size)
+        self.screen = pygame.display.set_mode(self.size, self.flags)
         pygame.display.set_caption(self.name)
         logger.info("Display Spawned!")
 
