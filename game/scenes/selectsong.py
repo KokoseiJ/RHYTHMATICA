@@ -196,6 +196,8 @@ class SongSelect(TransitionableScene):
             logger.error("No songs are found??? Exiting game...")
             self.game.stop()
 
+        pygame.mixer.music.load(os.path.join("res", "sound", "nextsong.mp3"))
+
         if self.fadein_surface is not None:
             self.game.add_task(self.fade_task, (
                 self.fadein_surface, True, lambda _:  self.play_preview()
@@ -223,6 +225,8 @@ class SongSelect(TransitionableScene):
                     self.current_song = self.next
                     self.songs[self.prev].move_left_out(1)
                     self.songs[self.current_song].move_left(1, callback)
+
+                pygame.mixer.music.play()
 
     def task(self):
         if self.is_moving.is_set():

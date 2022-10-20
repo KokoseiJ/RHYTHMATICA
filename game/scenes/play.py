@@ -13,7 +13,7 @@ class Circle:
     LOCX = ((3/8), (5/8))
     LOCY = ((3/16), (8/16), (13/16))
     COLORS = (
-        pygame.Color("firebrick"), pygame.Color("gold"),
+        pygame.Color("red"), pygame.Color("gold"),
         pygame.Color("forestgreen"), pygame.Color("darkturquoise"),
         pygame.Color("blue"), pygame.Color("darkviolet")
     )
