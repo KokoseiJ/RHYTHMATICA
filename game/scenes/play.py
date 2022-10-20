@@ -116,6 +116,8 @@ def parse_a3(data):
 
 
 def parse_a4(data):
+    logger.debug("called")
+    logger.debug(data)
     notelist = [list() for _ in range(6)]
 
     spb = 0
@@ -125,30 +127,41 @@ def parse_a4(data):
     i = 0
 
     for line in data.split()[1:]:
+        logger.debug("%d %s", i, line)
         if line[0] in ('b', 'd', 'w'):
             if line[0] == 'b':
                 spb = 1 / float(line[1:]) * 60
+                logger.debug("bpm detected, %f", spb)
             elif line[0] == 'd':
                 division = int(line[1:])
+                logger.debug("division detected, %d", division)
             elif line[0] == 'w':
                 offset = float(line[1:])
+                logger.debug("offset detected, %f", offset)
 
         elif line[0] == '/':
+            logger.debug("skip the beat %s times", line[1:])
             i += int(line[1:])
 
         else:
+            logger.debug("%f %d %f", spb, division, offset)
+            time_ = offset + (spb / division) * i
+            logger.debug("Adding note in %s at %d", line, time_)
             for num in line:
-                notelist[int(num)].append(offset + (spb / division) * i)
+                notelist[int(num)-1].append(time_)
+
+            i += 1
 
     return notelist
 
 
 def parse_notes(data):
     version = re.search(r"ver:([A-Z0-9]+)", data).group(1)
+    logger.debug(version)
     if version == "A3":
         return parse_a3(data)
     elif version == "A4":
-        return parse_a3(data)
+        return parse_a4(data)
     else:
         raise RuntimeError("Unknown Chart Version!")
 
