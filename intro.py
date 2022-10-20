@@ -1,6 +1,6 @@
 import pygame
 
-from play import Play
+from selectsong import SongSelect
 from utils import get_random_color
 from base import TransitionableScene
 
@@ -55,8 +55,8 @@ class Intro(TransitionableScene):
                 self.fadeout_surface, False, self.fadeout_callback))
 
     def fadeout_callback(self, _):
-        logger.info("Intro fadeout finished, starting Play Scene")
-        next_scene = Play(self.fadeout_surface)
+        logger.info("Intro fadeout finished, starting SongSelect Scene")
+        next_scene = SongSelect(self.fadeout_surface)
         self.game.set_scene(next_scene)
 
     def task(self):

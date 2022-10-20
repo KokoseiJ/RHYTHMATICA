@@ -1,6 +1,6 @@
 from base import Game
 from intro import Intro
-from play import Play
+from selectsong import SongSelect
 
 import logging
 
@@ -19,5 +19,5 @@ logger.addHandler(handler)
 
 game = Game((1920, 1080), fps=0, show_fps=True)
 game.init_pygame()
-game.set_scene(Intro)
+game.set_scene(SongSelect(None))
 game.run()

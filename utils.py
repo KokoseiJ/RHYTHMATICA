@@ -49,5 +49,26 @@ def blit_center_rel(dest, src, factors, *args, **kwargs):
     return blit_center(dest, src, (x, y), *args, **kwargs)
 
 
+def text_multiline(font, text, *args, **kwargs):
+    renders = [font.render(line.strip(), *args, **kwargs).convert_alpha()
+               for line in text.split("\n")]
+
+    sizes = [render.get_size() for render in renders]
+    total_w = max([size[0] for size in sizes])
+    total_h = sum([size[1] for size in sizes])
+
+    surface = pygame.Surface((total_w, total_h), pygame.SRCALPHA)
+
+    y = 0
+
+    for i in range(len(renders)):
+        w, h = sizes[i]
+        x = (total_w - w) / 2
+        surface.blit(renders[i], (x, y))
+        y += h
+
+    return surface
+
+
 def get_random_color():
     return tuple(random.choices(range(256), k=3))
