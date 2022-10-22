@@ -1,7 +1,5 @@
 from game.base import Game
 from game.scenes.intro import Intro
-from game.scenes.selectsong import SongSelect
-from game.scenes.play import Play
 
 import logging
 

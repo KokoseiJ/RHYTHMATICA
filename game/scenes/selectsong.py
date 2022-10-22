@@ -60,7 +60,7 @@ class SongPack:
             "Press G, H to change songs.\n"
             "Press N to start the game.",
             True, "black"
-        ), 1 / 9, fullsize)
+        ), self.game.font_size_ratio * 4 / 3, fullsize)
 
     @classmethod
     def from_path(cls, game, path):
@@ -266,7 +266,7 @@ class SongSelect(TransitionableScene):
                 f"Speed: {str(self.speed).ljust(4, '0')}x",
                 True,
                 "black"
-            ), 1 / 18
+            ), self.game.font_size_ratio * 2 / 3
         )
 
         blit_center_rel(self.game.screen, speed, (1, 1), (1, 1))

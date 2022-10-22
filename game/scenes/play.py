@@ -236,7 +236,7 @@ class Play(TransitionableScene):
 
         titletxt = self.game.fonts['black'].render(
             f"{self.songdata.artist} - {self.songdata.name}", True, "white")
-        titletxt = scale_rel(titletxt, 1/18)
+        titletxt = scale_rel(titletxt, self.game.font_size_ratio * 2 / 3)
         titletxt_bg = pygame.Surface((screen_size[0], titletxt.get_height()))
         titletxt_bg.fill("black")
         titletxt_bg.set_alpha(100)

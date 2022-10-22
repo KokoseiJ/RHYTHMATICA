@@ -43,11 +43,11 @@ class Intro(TransitionableScene):
 
         self.version = scale_rel(
             self.game.fonts['bold'].render("Ver. A10P", True, "black"),
-            0.05, maxsize)
+            self.game.font_size_ratio * 0.75, maxsize)
 
         self.pressntostart = scale_rel(
             self.game.fonts['black'].render("Press N to start", True, "black"),
-            0.075, maxsize)
+            self.game.font_size_ratio, maxsize)
 
         loadingpath = os.path.join("res", "image", "loading.png")
         self.fadeout_surface = pygame.transform.smoothscale(

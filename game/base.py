@@ -75,7 +75,8 @@ class TransitionableScene(Scene):
 
 
 class Game:
-    def __init__(self, size=None, name="RHYTHMATICA", fullscreen=False, fps=60, show_fps=False):
+    def __init__(self, size=None, name="RHYTHMATICA", fullscreen=False, fps=60,
+                 show_fps=False):
         self.size = size if size is not None else (1280, 720)
         self.name = name
         self.fps = fps
@@ -84,13 +85,13 @@ class Game:
         if fullscreen:
             self.flags = self.flags | pygame.FULLSCREEN
 
-
         logger.debug("size: %dx%d name: %s fps: %d", *size, name, fps)
 
         self.screen = None
         self.clock = None
 
         self.fonts = {}
+        self.font_size_ratio = 1 / 12
 
         self.tasks = Queue()
         self.stop_flag = Event()
@@ -117,7 +118,7 @@ class Game:
             folder = os.path.join("res", "fonts")
 
         if target_height is None:
-            target_height = self.screen.get_size()[1] / 12
+            target_height = self.screen.get_size()[1] * self.font_size_ratio
 
         logger.info("Loading fonts from %s, target height: %f",
                     folder, target_height)
