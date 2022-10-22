@@ -16,7 +16,7 @@ formatter = logging.Formatter(
 handler.setFormatter(formatter)
 logger.addHandler(handler)
 
-game = Game((1600, 900), fullscreen=False, fps=0, show_fps=True)
+game = Game((1280, 720), fullscreen=False, fps=0, show_fps=True)
 game.init_pygame()
 game.set_scene(Intro)
 game.run()

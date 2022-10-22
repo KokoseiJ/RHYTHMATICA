@@ -1,6 +1,6 @@
 import pygame
 
-from ..utils import blit_center_rel, scale_rel
+from ..utils import blit_center, blit_center_rel, scale_rel
 from ..base import TransitionableScene
 
 import os
@@ -170,13 +170,13 @@ class Play(TransitionableScene):
     name = "Play"
     KEYS = ["t", "y", "g", "h", "b", "n"]
 
-    def __init__(self, song, speed, prev_scene, fadein_surface=None):
+    def __init__(self, song, speed, prev_scene=None, fadein_surface=None):
         super().__init__()
 
         self.songdata = song
         self.speed = speed
         self.prev_scene = prev_scene
-        self.fadein_surface = fadein_surface
+        self.fade_surface = fadein_surface
 
         self.movetime = 1 / self.songdata.bpm * 60 / speed
 
@@ -203,6 +203,7 @@ class Play(TransitionableScene):
         self.miss_image = None
 
         self.bg_surface = None
+        self.bg_circle = [list() for _ in range(6)]
         self.edges = None
         self.key_status = [
             False, False,
@@ -247,16 +248,17 @@ class Play(TransitionableScene):
         self.bg_surface.blit(self.songdata.img_big, (0, 0))
 
         for n in range(6):
-            Circle(n, screen_size).draw(self.bg_surface)
+            self.bg_circle[n] = circle = Circle(n, screen_size)
+            circle.draw(self.bg_surface)
 
         blit_center_rel(self.bg_surface, titletxt_bg, (0.5, 0), (0.5, 0))
         blit_center_rel(self.bg_surface, titletxt, (0.5, 0), (0.5, 0))
 
         self.edges = [CircleEdge(n, screen_size) for n in range(6)]
 
-        if self.fadein_surface is not None:
+        if self.fade_surface is not None:
             self.game.add_task(self.fade_task, (
-                self.fadein_surface, True, self.start_game))
+                self.fade_surface, True, self.start_game))
 
     def start_game(self, _, t=None):
         if t is None:
@@ -272,6 +274,7 @@ class Play(TransitionableScene):
             self.game.add_task(self.spawn_task)
             self.game.add_task(self.draw_task)
             self.game.add_task(self.show_judge_task)
+            self.game.add_task(self.stop_task)
 
     def handle_event(self, event):
         if event.type == pygame.KEYDOWN or event.type == pygame.KEYUP:
@@ -357,10 +360,26 @@ class Play(TransitionableScene):
         if self.is_ongoing:
             self.game.add_task(self.draw_task)
 
+    def stop_task(self, game):
+        def callback(_):
+            self.game.set_scene(self.prev_scene)
+
+        if not self.channel.get_busy():
+            self.game.add_task(self.fade_task, (
+                self.fade_surface, False, callback))
+        else:
+            self.game.add_task(self.stop_task)
+
     def task(self):
         self.game.screen.blit(self.bg_surface, (0, 0))
         [edge.draw(self.game.screen, self.key_status[n])
          for n, edge in enumerate(self.edges)]
+
+        if self.elapsed_time == 0:
+            for i, circle in enumerate(self.bg_circle):
+                keytext = self.game.fonts['regular'].render(
+                    self.KEYS[i].upper(), 1, 'white')
+                blit_center(self.game.screen, keytext, circle.loc)
 
         scoretxt = self.game.fonts['regular'].render(
             str(round(self.score)), 1, 'black')
