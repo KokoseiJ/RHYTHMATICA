@@ -235,24 +235,20 @@ class Play(TransitionableScene):
         self.hit_image = scale_rel(self.hit_image, 2 / 7, screen_size)
         self.miss_image = scale_rel(self.miss_image, 2 / 7, screen_size)
 
-        titletxt = self.game.fonts['black'].render(
-            f"{self.songdata.artist} - {self.songdata.name}", True, "white")
-        titletxt = scale_rel(titletxt, self.game.font_size_ratio * 2 / 3)
-        titletxt_bg = pygame.Surface((screen_size[0], titletxt.get_height()))
-        titletxt_bg.fill("black")
-        titletxt_bg.set_alpha(100)
-
         self.bg_surface = pygame.Surface(screen_size)
 
         self.bg_surface.fill("white")
         self.bg_surface.blit(self.songdata.img_big, (0, 0))
 
+        height = screen_size[1] * self.game.font_size_ratio * 2 / 3
+        titletxt_bg = pygame.Surface((screen_size[0], height))
+        titletxt_bg.fill("black")
+        titletxt_bg.set_alpha(128)
+        blit_center_rel(self.bg_surface, titletxt_bg, (0.5, 0), (0.5, 0))
+
         for n in range(6):
             self.bg_circle[n] = circle = Circle(n, screen_size)
             circle.draw(self.bg_surface)
-
-        blit_center_rel(self.bg_surface, titletxt_bg, (0.5, 0), (0.5, 0))
-        blit_center_rel(self.bg_surface, titletxt, (0.5, 0), (0.5, 0))
 
         self.edges = [CircleEdge(n, screen_size) for n in range(6)]
 
@@ -380,6 +376,20 @@ class Play(TransitionableScene):
                 keytext = self.game.fonts['regular'].render(
                     self.KEYS[i].upper(), 1, 'white')
                 blit_center(self.game.screen, keytext, circle.loc)
+
+        titletxt = self.game.fonts['black'].render(
+            f"{self.songdata.artist} - {self.songdata.name}", True, "white")
+        titletxt = scale_rel(titletxt, self.game.font_size_ratio * 2 / 3)
+
+        width_ratio = self.elapsed_time / self.song_length
+        width = self.game.screen.get_width() * width_ratio
+
+        titletxt_bg = pygame.Surface((width, titletxt.get_height()))
+        titletxt_bg.fill("black")
+        titletxt_bg.set_alpha(100)
+
+        blit_center_rel(self.game.screen, titletxt_bg, (0, 0), (0, 0))
+        blit_center_rel(self.game.screen, titletxt, (0.5, 0), (0.5, 0))
 
         scoretxt = self.game.fonts['regular'].render(
             str(round(self.score)), 1, 'black')
