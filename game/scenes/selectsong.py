@@ -24,7 +24,7 @@ class SongPack:
         self.bpm = bpm
         self.notes = notes
         self.notedata = notedata
-        self.img = img.convert_alpha()
+        self.img = img.convert()
         self.preview = preview
         self.music = music
 

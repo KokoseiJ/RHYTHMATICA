@@ -51,7 +51,7 @@ class Intro(TransitionableScene):
 
         loadingpath = os.path.join("res", "image", "loading.png")
         self.fadeout_surface = pygame.transform.smoothscale(
-            pygame.image.load(loadingpath), maxsize).convert_alpha()
+            pygame.image.load(loadingpath), maxsize).convert()
 
         # loc, color, size_factor
         self.circles = [(
