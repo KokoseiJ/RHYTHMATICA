@@ -1,4 +1,4 @@
-from game.base import Game
+from game.base.game import Game
 from game.scenes.intro import Intro
 
 import logging

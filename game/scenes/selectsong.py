@@ -1,7 +1,7 @@
 import pygame
 
 from .play import Play
-from ..base import TransitionableScene
+from ..base.scene import TransitionableScene
 from ..utils import (
     SmoothMoveXY, calc_loc_rel, calc_center, scale_rel, blit_center_rel,
     text_multiline

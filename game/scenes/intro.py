@@ -1,9 +1,9 @@
 import pygame
 
+from ..base.scene import TransitionableScene
 from .play import Circle
 from .selectsong import SongSelect
 from ..utils import scale_rel, blit_center_rel
-from ..base import TransitionableScene
 
 import os
 import time

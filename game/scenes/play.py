@@ -1,7 +1,7 @@
 import pygame
 
 from ..utils import blit_center, blit_center_rel, scale_rel
-from ..base import TransitionableScene
+from ..base.scene import TransitionableScene
 
 import os
 import re
