@@ -156,10 +156,10 @@ class SongPack:
 
 
 class SongSelect(TransitionableScene):
-    def __init__(self, fadein_surface=None):
+    def __init__(self, fade_surface=None):
         super().__init__()
 
-        self.fade_surface = fadein_surface
+        self.fade_surface = fade_surface
 
         self.songs = []
         self.current_preview = None

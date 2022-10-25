@@ -170,13 +170,13 @@ class Play(TransitionableScene):
     name = "Play"
     KEYS = ["t", "y", "g", "h", "b", "n"]
 
-    def __init__(self, song, speed, prev_scene=None, fadein_surface=None):
+    def __init__(self, song, speed, prev_scene=None, fade_surface=None):
         super().__init__()
 
         self.songdata = song
         self.speed = speed
         self.prev_scene = prev_scene
-        self.fade_surface = fadein_surface
+        self.fade_surface = fade_surface
 
         self.movetime = 1 / self.songdata.bpm * 60 / speed
 
