@@ -1,5 +1,6 @@
 import pygame
 
+from .task import Task
 from .scene import Scene
 
 import os
@@ -103,7 +104,15 @@ class Game:
         """
         Task should be a callable with one argument, or (func, args, kwargs)
         """
-        self.tasks.put((task, args, kwargs))
+        if isinstance(task, Task):
+            self.tasks.put(task)
+        else:
+            if callable(task):
+                name = task.__code__.co_name
+                logger.warning("%s: Function based task is deprecated!", name)
+                self.tasks.put((task, args, kwargs))
+            else:
+                raise TypeError("task is neither Task nor callable!")
 
     def handle_event(self, event):
         if event.type == pygame.QUIT:
@@ -140,9 +149,13 @@ class Game:
             while not self.tasks.empty():
                 tasks.append(self.tasks.get())
 
-            for func, args, kwargs in tasks:
-                func(self, *(args if args else []),
-                     **(kwargs if kwargs else {}))
+            for task in tasks:
+                if isinstance(task, Task):
+                    task.run(self)
+                else:
+                    func, args, kwargs = task
+                    func(self, *(args if args else []),
+                         **(kwargs if kwargs else {}))
 
             self.task()
 
