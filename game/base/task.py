@@ -28,7 +28,7 @@ class Task:
         self.finish_flag.set()
 
 
-class WaitTask(Task):
+class WaitTimeTask(Task):
     def __init__(self, func, after=0, *args, name=None, **kwargs):
         super().__init__(func, *args, name=name, **kwargs)
         self.target_time = time.perf_counter() + after
@@ -42,12 +42,12 @@ class WaitTask(Task):
 
 
 class WaitForTask(Task):
-    def __init__(self, func, task, *args, name=None, **kwargs):
+    def __init__(self, func, after_task, *args, name=None, **kwargs):
         super().__init__(func, *args, name=name, **kwargs)
-        self.task = task
+        self.after_task = after_task
 
     def run(self, game):
-        if not self.task.is_finished:
+        if not self.after_task.is_finished:
             self.runagain(game)
         else:
             self._run(game)
