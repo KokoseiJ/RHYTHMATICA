@@ -1,7 +1,8 @@
 import pygame
 
-from ..utils import blit_center, blit_center_rel, scale_rel
 from ..base.scene import TransitionableScene
+from ..utils import blit_center, blit_center_rel, scale_rel
+from .result import Result
 
 import os
 import re
@@ -170,10 +171,10 @@ class Play(TransitionableScene):
     name = "Play"
     KEYS = ["t", "y", "g", "h", "b", "n"]
 
-    def __init__(self, song, speed, prev_scene=None, fade_surface=None):
+    def __init__(self, songdata, speed, prev_scene=None, fade_surface=None):
         super().__init__()
 
-        self.songdata = song
+        self.songdata = songdata
         self.speed = speed
         self.prev_scene = prev_scene
         self.fade_surface = fade_surface
@@ -358,7 +359,10 @@ class Play(TransitionableScene):
 
     def stop_task(self, game):
         def callback(_):
-            self.game.set_scene(self.prev_scene)
+            scene = Result(self.songdata, self.hits, self.misses,
+                           self.maxcombo, self.score, self.prev_scene,
+                           self.fade_surface)
+            self.game.set_scene(scene)
 
         if not self.channel.get_busy():
             self.game.add_task(self.fade_task, (
