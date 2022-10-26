@@ -12,7 +12,7 @@ logger = logging.getLogger("RHYTHMATICA")
 
 
 class ResultField:
-    def __init__(self, name, value, steps=25):
+    def __init__(self, name, value, steps=60):
         self.name = name
         self.target_value = value
         self.value = 0
