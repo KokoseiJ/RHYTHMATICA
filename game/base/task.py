@@ -1,5 +1,8 @@
 import time
+import logging
 from threading import Event
+
+logger = logging.getLogger("RHYTHMATICA")
 
 
 class Task:
@@ -24,6 +27,7 @@ class Task:
         self._run(game)
 
     def _run(self, game):
+        logger.debug("Running func")
         self.func(game, *self.args, **self.kwargs)
         self.finish_flag.set()
 
@@ -31,13 +35,19 @@ class Task:
 class WaitTimeTask(Task):
     def __init__(self, func, after=0, *args, name=None, **kwargs):
         super().__init__(func, *args, name=name, **kwargs)
+        self.target_time = 0
+        self.wait_for(after)
+
+    def wait_for(self, after):
         self.target_time = time.perf_counter() + after
 
     def run(self, game):
-        if time.perf_counter() < self.target_time:
+        now = time.perf_counter()
+        logger.debug("now: %f target: %f", now, self.target_time)
+        if now < self.target_time:
             self.runagain(game)
-
         else:
+            logger.debug("Target hit, running func")
             self._run(game)
 
 

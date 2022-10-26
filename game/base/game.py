@@ -105,6 +105,7 @@ class Game:
         Task should be a callable with one argument, or (func, args, kwargs)
         """
         if isinstance(task, Task):
+            logger.debug("Adding task %s", task)
             self.tasks.put(task)
         else:
             if callable(task):
@@ -155,6 +156,7 @@ class Game:
 
             for task in tasks:
                 if isinstance(task, Task):
+                    logger.debug("Running task %s", task.name)
                     task.run(self)
                 else:
                     func, args, kwargs = task
