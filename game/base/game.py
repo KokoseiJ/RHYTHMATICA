@@ -109,7 +109,11 @@ class Game:
         else:
             if callable(task):
                 name = task.__code__.co_name
-                logger.warning("%s: Function based task is deprecated!", name)
+                filename = task.__code__.co_filename.rsplit("/", 1)[-1]
+                line = task.__code__.co_firstlineno
+                logger.warning(
+                    "%s (%s:%d): Function based task is deprecated!",
+                    name, filename, line)
                 self.tasks.put((task, args, kwargs))
             else:
                 raise TypeError("task is neither Task nor callable!")
