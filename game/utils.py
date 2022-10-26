@@ -80,13 +80,13 @@ def calc_size_rel(full_y, size, factor):
     return (neww, newh)
 
 
-def calc_center(srcsize, loc, center=(0.5, 0.5)):
+def calc_center(srcsize, loc, center_factor=(0.5, 0.5)):
     w, h = srcsize
-    return (loc[0] - w * center[0], loc[1] - h * center[1])
+    return (loc[0] - w * center_factor[0], loc[1] - h * center_factor[1])
 
 
-def calc_loc_rel(full, factors):
-    return (full[0] * factors[0], full[1] * factors[1])
+def calc_loc_rel(srcsize, factors):
+    return (srcsize[0] * factors[0], srcsize[1] * factors[1])
 
 
 def scale_rel(surface, factor, maxsize=None, func=None):
@@ -110,7 +110,7 @@ def blit_center_rel(dest, src, factors, center=(0.5, 0.5), *args, **kwargs):
     return blit_center(dest, src, loc_rel, center, *args, **kwargs)
 
 
-def text_multiline(font, text, *args, background=None, **kwargs):
+def text_multiline(font, text, *args, background=None, bg_alpha=128, **kwargs):
     renders = [font.render(line.strip(), *args, **kwargs)
                for line in text.split("\n")]
 
@@ -123,7 +123,7 @@ def text_multiline(font, text, *args, background=None, **kwargs):
         if not isinstance(background, pygame.Color):
             background = pygame.Color(background)
 
-        background.a = 128
+        background.a = bg_alpha
 
         surface.fill(background)
 
