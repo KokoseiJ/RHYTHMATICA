@@ -56,7 +56,7 @@ class ResultTask(WaitTimeTask):
 
         return render
 
-    def func(self, game):
+    def func(self, self_, game):
         logger.debug("running")
         render = self.draw_current_fields(game)
         blit_center_rel(game.screen, render, (0, 0.5), (0, 0.5))

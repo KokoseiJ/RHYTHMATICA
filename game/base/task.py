@@ -28,7 +28,7 @@ class Task:
 
     def _run(self, game):
         logger.debug("Running func")
-        self.func(game, *self.args, **self.kwargs)
+        self.func(self, game, *self.args, **self.kwargs)
         self.finish_flag.set()
 
 
