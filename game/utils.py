@@ -110,7 +110,8 @@ def blit_center_rel(dest, src, factors, center=(0.5, 0.5), *args, **kwargs):
     return blit_center(dest, src, loc_rel, center, *args, **kwargs)
 
 
-def text_multiline(font, text, *args, background=None, bg_alpha=128, **kwargs):
+def text_multiline(font, text, *args, background=None, bg_alpha=128,
+                   centered=True, **kwargs):
     renders = [font.render(line.strip(), *args, **kwargs)
                for line in text.split("\n")]
 
@@ -131,7 +132,7 @@ def text_multiline(font, text, *args, background=None, bg_alpha=128, **kwargs):
 
     for i in range(len(renders)):
         w, h = sizes[i]
-        x = (total_w - w) / 2
+        x = (total_w - w) / 2 if centered else 0
         surface.blit(renders[i], (x, y))
         y += h
 
