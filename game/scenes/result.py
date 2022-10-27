@@ -147,6 +147,21 @@ class Result(TransitionableScene):
         self.result_task = None
         self.grade_task = None
 
+    @property
+    def grade(self):
+        if self.score >= 10000:
+            return "s"
+        elif self.score >= 8000:
+            return "a"
+        elif self.score >= 6000:
+            return "b"
+        elif self.score >= 4000:
+            return "c"
+        elif self.score >= 2000:
+            return "d"
+        else:
+            return "f"
+
     def start(self):
         result = self.game.fonts['bold'].render("Result", True, "white")
         result = scale_rel(result, self.game.font_size_ratio * 1.5)
@@ -169,7 +184,7 @@ class Result(TransitionableScene):
 
         grade_sound = pygame.mixer.Sound(
             os.path.join("res", "sound", "glug.ogg"))
-        self.grade_task = GradeTask("a", grade_sound, self.result_task)
+        self.grade_task = GradeTask(self.grade, grade_sound, self.result_task)
 
         start_task = WaitForTask(self.fadein_callback, fade_task)
 
