@@ -120,8 +120,8 @@ def parse_a4(data):
     logger.debug("called")
     notelist = [list() for _ in range(6)]
 
-    spb = 0
-    division = 0
+    bpm = 1
+    division = 1
     offset = 0
 
     i = 0
@@ -130,13 +130,18 @@ def parse_a4(data):
         logger.debug("%d %s", i, line)
         if line[0] in ('b', 'd', 'w'):
             if line[0] == 'b':
-                spb = 1 / float(line[1:]) * 60
-                logger.debug("bpm detected, %f", spb)
+                bpm = float(line[1:])
+                offset = offset + (60 / bpm / division) * i
+                i = 0
+                logger.debug("bpm detected, %f", bpm)
             elif line[0] == 'd':
+                offset = offset + (60 / bpm / division) * i
+                i = 0
                 division = int(line[1:])
                 logger.debug("division detected, %d", division)
             elif line[0] == 'w':
                 offset = float(line[1:])
+                i = 0
                 logger.debug("offset detected, %f", offset)
 
         elif line[0] == '/':
@@ -144,8 +149,8 @@ def parse_a4(data):
             i += int(line[1:])
 
         else:
-            logger.debug("%f %d %f", spb, division, offset)
-            time_ = offset + (spb / division) * i
+            logger.debug("%f %d %f", bpm, division, offset)
+            time_ = offset + (60 / bpm / division) * i
             logger.debug("Adding note in %s at %d", line, time_)
             for num in line:
                 notelist[int(num)-1].append(time_)
