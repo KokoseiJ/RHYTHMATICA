@@ -20,6 +20,9 @@ class Task:
     def is_finished(self):
         return self.finish_flag.is_set()
 
+    def done(self):
+        self.finish_flag.set()
+
     def runagain(self, game):
         game.add_task(self)
 

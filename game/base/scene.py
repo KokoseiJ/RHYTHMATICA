@@ -66,7 +66,7 @@ class FadeTask(Task):
             logger.debug("Fade finished")
             if callable(self.callback):
                 self.callback(game)
-            self.finish_flag.set()
+            self.done()
 
 
 class TransitionableScene(Scene):
