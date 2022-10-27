@@ -27,9 +27,7 @@ class Task:
         self._run(game)
 
     def _run(self, game):
-        logger.debug("Running func")
         self.func(self, game, *self.args, **self.kwargs)
-        self.finish_flag.set()
 
 
 class WaitTimeTask(Task):
@@ -60,4 +58,6 @@ class WaitForTask(Task):
         if not self.after_task.is_finished:
             self.runagain(game)
         else:
+            logger.debug(
+                "Task %s finished! running func...", self.after_task.name)
             self._run(game)

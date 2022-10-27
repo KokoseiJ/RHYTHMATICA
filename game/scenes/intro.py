@@ -25,40 +25,51 @@ class Intro(TransitionableScene):
         self.size_increment = 0.1
 
         self.circles = None
+        self.logo = None
+        self.pressntostart = None
+        self.version = None
+        self.fade_bg = None
 
         self.start_time = 0
         self.next_time = 0
         self.big = True
 
-        self.logo = None
-        self.version = None
-        self.pressntostart = None
-        self.fadeout_surface = None
+    def prepare_res(self):
+        logger.info("Intro: Preparing resources...")
+        maxsize = self.game.screen.get_size()
 
-    def start(self):
-        w, h = maxsize = self.game.screen.get_size()
-
+        logger.info("Loading RHYTHMATICA logo...")
         logo_raw = pygame.image.load(os.path.join("res", "image", "logo.png"))
         self.logo = scale_rel(logo_raw, 0.25, maxsize).convert_alpha()
+
+        logger.info("Rendering Text...")
+        self.pressntostart = scale_rel(
+            self.game.fonts['black'].render("Press N to start", True, "black"),
+            self.game.font_size_ratio, maxsize)
 
         self.version = scale_rel(
             self.game.fonts['bold'].render("Ver. A10P", True, "black"),
             self.game.font_size_ratio * 0.75, maxsize)
 
-        self.pressntostart = scale_rel(
-            self.game.fonts['black'].render("Press N to start", True, "black"),
-            self.game.font_size_ratio, maxsize)
-
+        logger.info("Loading loading screen...")
         loadingpath = os.path.join("res", "image", "loading.png")
-        self.fadeout_surface = pygame.transform.smoothscale(
+        self.fade_bg = pygame.transform.smoothscale(
             pygame.image.load(loadingpath), maxsize).convert()
 
+        logger.info("Finished!")
+
+    def start(self):
+        self.prepare_res()
+
+        w, h = self.game.screen.get_size()
+
         # loc, color, size_factor
-        self.circles = [(
-            (random.randrange(w), random.randrange(h)),
-            random.choice(Circle.COLORS),
-            random.random())
-            for _ in range(10)
+        self.circles = [
+            (
+                (random.randrange(w), random.randrange(h)),
+                random.choice(Circle.COLORS),
+                random.random()
+            ) for _ in range(10)
         ]
 
         self.start_time = time.perf_counter()
@@ -76,13 +87,12 @@ class Intro(TransitionableScene):
             pygame.mixer.music.stop()
             pygame.mixer.music.load(os.path.join("res", "sound", "start.mp3"))
             pygame.mixer.music.play()
-            self.game.add_task(self.fade_task, (
-                self.fadeout_surface, False, self.fadeout_callback))
+            self.start_fade(fadein=False, callback=self.fadeout_callback)
 
-    def fadeout_callback(self, _):
+    def fadeout_callback(self, game):
         logger.info("Intro fadeout finished, starting SongSelect Scene")
-        next_scene = SongSelect(self.fadeout_surface)
-        self.game.set_scene(next_scene)
+        next_scene = SongSelect(self.fade_bg)
+        game.set_scene(next_scene)
 
     def task(self):
         if time.perf_counter() > self.next_time:

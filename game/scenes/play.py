@@ -118,7 +118,6 @@ def parse_a3(data):
 
 def parse_a4(data):
     logger.debug("called")
-    logger.debug(data)
     notelist = [list() for _ in range(6)]
 
     spb = 0
@@ -171,13 +170,13 @@ class Play(TransitionableScene):
     name = "Play"
     KEYS = ["t", "y", "g", "h", "b", "n"]
 
-    def __init__(self, songdata, speed, prev_scene=None, fade_surface=None):
+    def __init__(self, songdata, speed, prev_scene=None, fade_bg=None):
         super().__init__()
 
         self.songdata = songdata
         self.speed = speed
         self.prev_scene = prev_scene
-        self.fade_surface = fade_surface
+        self.fade_bg = fade_bg
 
         self.movetime = 1 / self.songdata.bpm * 60 / speed
 
@@ -198,7 +197,7 @@ class Play(TransitionableScene):
         self.combo = 0
         self.maxcombo = 0
         self.score = 0
-        self.score_per_note = 10000 / self.songdata.notes
+        self.score_per_note = 10000 / self.songdata.notecount
 
         self.hit_image = None
         self.miss_image = None
@@ -253,11 +252,10 @@ class Play(TransitionableScene):
 
         self.edges = [CircleEdge(n, screen_size) for n in range(6)]
 
-        if self.fade_surface is not None:
-            self.game.add_task(self.fade_task, (
-                self.fade_surface, True, self.start_game))
+        if self.fade_bg is not None:
+            self.start_fade(callback=self.start_game)
 
-    def start_game(self, _, t=None):
+    def start_game(self, game, t=None):
         if t is None:
             logger.info("Starting the game in 3 seconds...")
             t = time.perf_counter()
@@ -358,15 +356,14 @@ class Play(TransitionableScene):
             self.game.add_task(self.draw_task)
 
     def stop_task(self, game):
-        def callback(_):
+        def callback(game):
             scene = Result(self.songdata, self.hits, self.misses,
                            self.maxcombo, self.score, self.prev_scene,
-                           self.fade_surface)
-            self.game.set_scene(scene)
+                           self.fade_bg)
+            game.set_scene(scene)
 
         if not self.channel.get_busy():
-            self.game.add_task(self.fade_task, (
-                self.fade_surface, False, callback))
+            self.start_fade(fadein=False, callback=callback)
         else:
             self.game.add_task(self.stop_task)
 

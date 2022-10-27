@@ -44,6 +44,8 @@ class FadeTask(Task):
 
         self.start_time = None
 
+        logger.debug("Starting a new FadeTask")
+
     def func(self, task, game):
         if self.start_time is None:
             self.start_time = time.perf_counter()
@@ -63,8 +65,8 @@ class FadeTask(Task):
         else:
             logger.debug("Fade finished")
             if callable(self.callback):
-                logger.debug("Callback found, calling...")
                 self.callback(game)
+            self.finish_flag.set()
 
 
 class TransitionableScene(Scene):
@@ -72,6 +74,7 @@ class TransitionableScene(Scene):
         self.fade_bg = None
         self.fade_duration = 1
         self.fade_task = None
+        self.fade_ongoing = Event()
 
     def start_fade(
             self, surface=None, duration=None, fadein=True, callback=None):
@@ -81,5 +84,14 @@ class TransitionableScene(Scene):
         if duration is None:
             duration = self.fade_duration
 
-        self.fade_task = FadeTask(surface, duration, fadein, callback)
+        def _callback(game):
+            self.fade_ongoing.clear()
+            if callable(callback):
+                logger.debug("Callback found, calling...")
+                callback(game)
+
+        self.fade_task = FadeTask(surface, duration, fadein, _callback)
         self.game.add_task(self.fade_task)
+        self.fade_ongoing.set()
+
+        return self.fade_task

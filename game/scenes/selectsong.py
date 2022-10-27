@@ -15,20 +15,20 @@ logger = logging.getLogger("RHYTHMATICA")
 
 
 class SongPack:
-    def __init__(self, game, path, name, artist, bpm, notes, notedata, img,
+    def __init__(self, game, path, name, artist, bpm, notecount, notedata, img,
                  preview, music):
         self.game = game
         self.path = path
         self.name = name
         self.artist = artist
         self.bpm = bpm
-        self.notes = notes
+        self.notecount = notecount
         self.notedata = notedata
         self.img = img.convert()
         self.preview = preview
         self.music = music
 
-        notepersec = int(notes) / self.music.get_length()
+        notepersec = int(notecount) / self.music.get_length()
 
         if notepersec < 3:
             self.difficulty = "EASY"
@@ -69,7 +69,7 @@ class SongPack:
         try:
             with open(os.path.join(path, "info.txt")) as f:
                 try:
-                    name, artist, bpm, notes = [
+                    name, artist, bpm, notecount = [
                         x.strip() for x in f.readlines()[:4]]
                 except ValueError:
                     logger.exception(
@@ -86,8 +86,8 @@ class SongPack:
             logger.exception("Failed to load from %s.", path)
             return None
 
-        return cls(game, path, name, artist, float(bpm), int(notes), notedata,
-                   img, preview, music)
+        return cls(game, path, name, artist, float(bpm), int(notecount),
+                   notedata, img, preview, music)
 
     @classmethod
     def load_bulk(cls, game, path):
@@ -156,10 +156,10 @@ class SongPack:
 
 
 class SongSelect(TransitionableScene):
-    def __init__(self, fade_surface=None):
+    def __init__(self, fade_bg=None):
         super().__init__()
 
-        self.fade_surface = fade_surface
+        self.fade_bg = fade_bg
 
         self.songs = []
         self.current_preview = None
@@ -197,10 +197,8 @@ class SongSelect(TransitionableScene):
 
         pygame.mixer.music.load(os.path.join("res", "sound", "nextsong.mp3"))
 
-        if self.fade_surface is not None:
-            self.game.add_task(self.fade_task, (
-                self.fade_surface, True, lambda _:  self.play_preview()
-            ))
+        if self.fade_bg is not None:
+            self.start_fade(callback=lambda _:  self.play_preview())
 
     def handle_event(self, event):
         if event.type == pygame.KEYDOWN and event.key == pygame.K_q:
@@ -243,16 +241,15 @@ class SongSelect(TransitionableScene):
                 pygame.mixer.music.load(
                     os.path.join("res", "sound", "start.mp3"))
                 pygame.mixer.music.play()
-                self.game.add_task(self.fade_task, (
-                    self.fade_surface, False, self.fadeout_callback))
+                self.start_fade(fadein=False, callback=self.fadeout_callback)
 
-    def fadeout_callback(self, _):
+    def fadeout_callback(self, game):
         logger.info("SongSelect fadeout finished, starting Play Scene")
 
         song = self.songs[self.current_song]
 
         logger.info("Song: %s, Speed: %f", song.name, self.speed)
-        next_scene = Play(song, self.speed, self, self.fade_surface)
+        next_scene = Play(song, self.speed, self, self.fade_bg)
         self.game.set_scene(next_scene)
 
     def task(self):

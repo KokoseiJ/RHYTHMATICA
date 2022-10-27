@@ -105,16 +105,15 @@ class Game:
         Task should be a callable with one argument, or (func, args, kwargs)
         """
         if isinstance(task, Task):
-            logger.debug("Adding task %s", task)
             self.tasks.put(task)
         else:
             if callable(task):
-                name = task.__code__.co_name
-                filename = task.__code__.co_filename.rsplit("/", 1)[-1]
-                line = task.__code__.co_firstlineno
-                logger.warning(
-                    "%s (%s:%d): Function based task is deprecated!",
-                    name, filename, line)
+                # name = task.__code__.co_name
+                # filename = task.__code__.co_filename.rsplit("/", 1)[-1]
+                # line = task.__code__.co_firstlineno
+                # logger.warning(
+                #     "%s (%s:%d): Function based task is deprecated!",
+                #     name, filename, line)
                 self.tasks.put((task, args, kwargs))
             else:
                 raise TypeError("task is neither Task nor callable!")
@@ -156,7 +155,6 @@ class Game:
 
             for task in tasks:
                 if isinstance(task, Task):
-                    logger.debug("Running task %s", task.name)
                     task.run(self)
                 else:
                     func, args, kwargs = task

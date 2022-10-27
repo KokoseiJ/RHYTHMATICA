@@ -2,6 +2,9 @@ import pygame
 
 import time
 import random
+import logging
+
+logger = logging.getLogger("RHYTHMATICA")
 
 
 class SmoothMoveXY:
@@ -91,6 +94,8 @@ def calc_loc_rel(srcsize, factors):
 
 def scale_rel(surface, factor, maxsize=None, func=None):
     if maxsize is None:
+        # logger.warning("Warning: maxsize unknown! "
+        #                "This might cause size mismatches on scaled screen.")
         maxsize = pygame.display.get_window_size()
     if func is None:
         func = pygame.transform.smoothscale

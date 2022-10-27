@@ -1,6 +1,6 @@
 import pygame
 
-from ..base.task import WaitTimeTask
+from ..base.task import Task, WaitForTask
 from ..utils import blit_center_rel, scale_rel, text_multiline
 from ..base.scene import TransitionableScene
 
@@ -34,14 +34,17 @@ class ResultField:
             return self.target_value
 
 
-class ResultTask(WaitTimeTask):
+class ResultTask(Task):
     def __init__(self, fields, sound, fontsize=1):
         super().__init__(self.func, name="Result")
         self.fields = fields
         self.sound = sound
         self.fontsize = 1
-        self.next_update = time.perf_counter()
+        self.next_update = None
         self.update_interval = 0.05
+
+    def set_starttime(self, interval=1):
+        self.next_update = time.perf_counter() + interval
 
     def draw_current_fields(self, game):
         text = "\n".join([
@@ -57,14 +60,11 @@ class ResultTask(WaitTimeTask):
         return render
 
     def func(self, self_, game):
-        logger.debug("running")
         render = self.draw_current_fields(game)
         blit_center_rel(game.screen, render, (0, 0.5), (0, 0.5))
 
-        logger.debug("%f %f", time.perf_counter(), self.next_update)
         if (not self.fields[-1].is_finished) and \
                 time.perf_counter() > self.next_update:
-            logger.debug("Update")
             [field.stepup() for field in self.fields if not field.is_finished]
             self.sound.play()
             self.next_update += self.update_interval
@@ -74,7 +74,8 @@ class ResultTask(WaitTimeTask):
 
 class Result(TransitionableScene):
     def __init__(self, songdata, hits, misses, maxcombo, score,
-                 prev_scene=None, fade_surface=None):
+                 prev_scene=None, fade_bg=None):
+        super().__init__()
         self.songdata = songdata
 
         self.fields = [
@@ -87,7 +88,7 @@ class Result(TransitionableScene):
             )
         ]
 
-        self.fade_surface = None
+        self.fade_bg = fade_bg
 
     def start(self):
         result = self.game.fonts['bold'].render("Result", True, "white")
@@ -103,10 +104,20 @@ class Result(TransitionableScene):
         blit_center_rel(self.bg_surface, result_bg, (0.5, 0), (0.5, 0))
         blit_center_rel(self.bg_surface, result, (0.5, 0), (0.5, 0))
 
+        fade_task = self.start_fade()
+
         sound = pygame.mixer.Sound(os.path.join("res", "sound", "coin.ogg"))
-        task = ResultTask(self.fields, sound)
+        result_task = ResultTask(self.fields, sound)
+
+        task = WaitForTask(self.fadein_callback, fade_task, result_task)
 
         self.game.add_task(task)
+
+    def fadein_callback(self, task, game, result_task):
+        game.add_task(result_task)
+        result_task.set_starttime()
+        pygame.mixer.music.load(os.path.join("res", "sound", "result.mp3"))
+        pygame.mixer.music.play()
 
     def task(self):
         self.game.screen.blit(self.bg_surface, (0, 0))
