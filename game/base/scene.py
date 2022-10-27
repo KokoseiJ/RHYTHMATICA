@@ -1,3 +1,6 @@
+from .task import Task
+from ..utils import blit_center_rel
+
 import time
 import logging
 from threading import Event
@@ -27,44 +30,56 @@ class Scene:
         pass
 
 
+class FadeTask(Task):
+    def __init__(self, surface, duration, fadein=True, callback=None):
+        super().__init__(self.func, name="FadeTask")
+        self.surface = surface
+        self.duration = duration
+        self.fadein = fadein
+        self.callback = callback
+
+        self.orig_opacity = 255 if fadein else 0
+        target_delta = -255 if fadein else 255
+        self.increment = target_delta / duration
+
+        self.start_time = None
+
+    def func(self, task, game):
+        if self.start_time is None:
+            self.start_time = time.perf_counter()
+
+        elapsed_time = time.perf_counter() - self.start_time
+
+        alpha = self.orig_opacity + self.increment * elapsed_time
+        alpha = alpha if 0 <= alpha <= 255 else 0 if self.fadein else 255
+
+        surf_alpha = self.surface.copy()
+        surf_alpha.set_alpha(alpha)
+
+        blit_center_rel(game.screen, surf_alpha, (0.5, 0.5))
+
+        if elapsed_time < self.duration:
+            self.runagain(game)
+        else:
+            logger.debug("Fade finished")
+            if callable(self.callback):
+                logger.debug("Callback found, calling...")
+                self.callback(game)
+
+
 class TransitionableScene(Scene):
     def __init__(self):
         self.fade_bg = None
-        self.fade_ongoing = Event()
         self.fade_duration = 1
+        self.fade_task = None
 
-    def fade_task(self, game, surface, fadein=True, callback=None,
-                  start_time=None, duration=None):
-        self.fade_ongoing.set()
-        if start_time is None:
-            start_time = time.perf_counter()
+    def start_fade(
+            self, surface=None, duration=None, fadein=True, callback=None):
+        if surface is None:
+            surface = self.fade_bg
+
         if duration is None:
             duration = self.fade_duration
 
-        elapsed_time = time.perf_counter() - start_time
-
-        target = 255 * (-1 if fadein else 1)
-
-        opacity = 255 if fadein else 0
-        opacity += round(target / duration * elapsed_time)
-
-        logger.debug("t: %f, a: %d", elapsed_time, opacity)
-
-        surface_copy = surface.copy()
-        surface_copy.set_alpha(opacity)
-
-        if self.fade_bg is not None:
-            game.screen.blit(self.fade_bg, (0, 0))
-        game.screen.blit(surface_copy, (0, 0))
-
-        if elapsed_time > duration:
-            logger.debug("Fade task ended")
-            self.fade_ongoing.clear()
-            logger.debug(callback)
-            if callable(callback):
-                logger.debug("Callback found, calling")
-                callback(self)
-            return
-
-        game.add_task(self.fade_task, (
-            surface, fadein, callback, start_time, duration))
+        self.fade_task = FadeTask(surface, duration, fadein, callback)
+        self.game.add_task(self.fade_task)
