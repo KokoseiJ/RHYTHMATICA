@@ -96,9 +96,9 @@ class Note(CircleEdge):
     def judge(self):
         diff = abs(self.time - time.perf_counter())
         logger.debug("%f", diff)
-        if diff > 0.4:
+        if diff > 0.3:
             return False, None
-        elif diff > 0.2:
+        elif diff > 0.15:
             return True, False
         else:
             return True, True
