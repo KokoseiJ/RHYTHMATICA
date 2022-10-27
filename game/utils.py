@@ -73,9 +73,6 @@ class SmoothMoveXY:
 
 
 def calc_size_rel(full_y, size, factor):
-    if factor > 1:
-        factor /= 100
-
     w, h = size
     newh = full_y * factor
     neww = full_y / h * w * factor
