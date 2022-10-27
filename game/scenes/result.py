@@ -12,7 +12,7 @@ logger = logging.getLogger("RHYTHMATICA")
 
 
 class ResultField:
-    def __init__(self, name, value, steps=10):
+    def __init__(self, name, value, steps=70):
         self.name = name
         self.target_value = value
         self.value = 0
@@ -142,6 +142,7 @@ class Result(TransitionableScene):
             )
         ]
 
+        self.prev_scene = prev_scene
         self.fade_bg = fade_bg
 
         self.result_task = None
@@ -149,18 +150,32 @@ class Result(TransitionableScene):
 
     @property
     def grade(self):
-        if self.score >= 10000:
+        score = self.fields[-1].target_value
+        if score >= 10000:
             return "s"
-        elif self.score >= 8000:
+        elif score >= 8000:
             return "a"
-        elif self.score >= 6000:
+        elif score >= 6000:
             return "b"
-        elif self.score >= 4000:
+        elif score >= 4000:
             return "c"
-        elif self.score >= 2000:
+        elif score >= 2000:
             return "d"
         else:
             return "f"
+
+    def handle_event(self, event):
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_n:
+            if self.fade_ongoing.is_set():
+                logger.warning("Event while fade is ongoing, ignoring...")
+            elif not self.result_task.is_finished:
+                logger.info("N pressed, skipping animation")
+                self.result_task.force_finish()
+            else:
+                self.start_fade(fadein=False, callback=self.fadeout_callback)
+
+    def fadeout_callback(self, game):
+        game.set_scene(self.prev_scene)
 
     def start(self):
         result = self.game.fonts['bold'].render("Result", True, "white")
