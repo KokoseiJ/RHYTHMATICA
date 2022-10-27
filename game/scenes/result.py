@@ -12,7 +12,7 @@ logger = logging.getLogger("RHYTHMATICA")
 
 
 class ResultField:
-    def __init__(self, name, value, steps=60):
+    def __init__(self, name, value, steps=10):
         self.name = name
         self.target_value = value
         self.value = 0
@@ -59,16 +59,70 @@ class ResultTask(Task):
 
         return render
 
-    def func(self, self_, game):
-        render = self.draw_current_fields(game)
-        blit_center_rel(game.screen, render, (0, 0.5), (0, 0.5))
+    def force_finish(self):
+        for field in self.fields:
+            field.value = field.target_value
 
+    def func(self, self_, game):
         if (not self.fields[-1].is_finished) and \
+                self.next_update is not None and \
                 time.perf_counter() > self.next_update:
+
             [field.stepup() for field in self.fields if not field.is_finished]
             self.sound.play()
             self.next_update += self.update_interval
+
+        elif self.fields[-1].is_finished:
+            self.done()
+
+        render = scale_rel(
+            self.draw_current_fields(game), game.font_size_ratio * 4 * 1.25)
+        blit_center_rel(game.screen, render, (0, 0.5), (0, 0.5))
         
+        self.runagain(game)
+
+
+class GradeTask(WaitForTask):
+    def __init__(self, grade, sound, task):
+        super().__init__(self.func, task, name=f"GradeTask_{grade}")
+        image_path = os.path.join("res", "image", "rating", f"{grade}.png")
+        self.image = pygame.image.load(image_path).convert_alpha()
+
+        self.sound = sound
+
+        self.end_size = 0.8
+
+        self.start_time = None
+        self.end_time = 0.6
+        self.pivot_time = self.end_time / 4 * 3
+
+        self.increment = 1 / (self.end_time / 2)
+
+    @property
+    def elapsed_time(self):
+        if self.start_time is not None:
+            return time.perf_counter() - self.start_time
+        else:
+            return 0
+
+    def get_size(self):
+        if self.elapsed_time > self.end_time:
+            return 1
+        elif self.elapsed_time <= self.pivot_time:
+            return self.increment * self.elapsed_time
+        else:
+            return self.increment * (2 * self.pivot_time - self.elapsed_time)
+
+    def func(self, task, game):
+        if self.start_time is None:
+            self.start_time = time.perf_counter()
+            self.sound.play()
+
+        size = self.end_size * self.get_size()
+
+        img_copy = scale_rel(self.image.copy(), size)
+        blit_center_rel(game.screen, img_copy, (0.8, 0.5))
+
         self.runagain(game)
 
 
@@ -90,6 +144,9 @@ class Result(TransitionableScene):
 
         self.fade_bg = fade_bg
 
+        self.result_task = None
+        self.grade_task = None
+
     def start(self):
         result = self.game.fonts['bold'].render("Result", True, "white")
         result = scale_rel(result, self.game.font_size_ratio * 1.5)
@@ -106,16 +163,22 @@ class Result(TransitionableScene):
 
         fade_task = self.start_fade()
 
-        sound = pygame.mixer.Sound(os.path.join("res", "sound", "coin.ogg"))
-        result_task = ResultTask(self.fields, sound)
+        result_sound = pygame.mixer.Sound(
+            os.path.join("res", "sound", "coin.ogg"))
+        self.result_task = ResultTask(self.fields, result_sound)
 
-        task = WaitForTask(self.fadein_callback, fade_task, result_task)
+        grade_sound = pygame.mixer.Sound(
+            os.path.join("res", "sound", "glug.ogg"))
+        self.grade_task = GradeTask("a", grade_sound, self.result_task)
 
-        self.game.add_task(task)
+        start_task = WaitForTask(self.fadein_callback, fade_task)
 
-    def fadein_callback(self, task, game, result_task):
-        game.add_task(result_task)
-        result_task.set_starttime()
+        self.game.add_task(start_task)
+        self.game.add_task(self.result_task)
+        self.game.add_task(self.grade_task)
+
+    def fadein_callback(self, task, game):
+        self.result_task.set_starttime()
         pygame.mixer.music.load(os.path.join("res", "sound", "result.mp3"))
         pygame.mixer.music.play()
 
