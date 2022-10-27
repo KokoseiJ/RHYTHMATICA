@@ -79,8 +79,8 @@ class SongPack:
                 notedata = f.read()
 
             img = pygame.image.load(os.path.join(path, "img.png"))
-            preview = pygame.mixer.Sound(os.path.join(path, "pre.wav"))
-            music = pygame.mixer.Sound(os.path.join(path, "song.wav"))
+            preview = pygame.mixer.Sound(os.path.join(path, "pre.ogg"))
+            music = pygame.mixer.Sound(os.path.join(path, "song.ogg"))
 
         except FileNotFoundError:
             logger.exception("Failed to load from %s.", path)
