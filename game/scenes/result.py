@@ -7,6 +7,7 @@ from ..base.scene import TransitionableScene
 import os
 import time
 import logging
+from threading import Event
 
 logger = logging.getLogger("RHYTHMATICA")
 
@@ -43,6 +44,8 @@ class ResultTask(Task):
         self.next_update = None
         self.update_interval = 0.05
 
+        self.stop_flag = Event()
+
     def set_starttime(self, interval=1):
         self.next_update = time.perf_counter() + interval
 
@@ -63,6 +66,9 @@ class ResultTask(Task):
         for field in self.fields:
             field.value = field.target_value
 
+    def stop(self):
+        self.stop_flag.set()
+
     def func(self, self_, game):
         if (not self.fields[-1].is_finished) and \
                 self.next_update is not None and \
@@ -79,7 +85,8 @@ class ResultTask(Task):
             self.draw_current_fields(game), game.font_size_ratio * 4 * 1.25)
         blit_center_rel(game.screen, render, (0, 0.5), (0, 0.5))
         
-        self.runagain(game)
+        if not self.stop_flag.is_set():
+            self.runagain(game)
 
 
 class GradeTask(WaitForTask):
@@ -98,6 +105,8 @@ class GradeTask(WaitForTask):
 
         self.increment = 1 / (self.end_time / 2)
 
+        self.stop_flag = Event()
+
     @property
     def elapsed_time(self):
         if self.start_time is not None:
@@ -113,6 +122,9 @@ class GradeTask(WaitForTask):
         else:
             return self.increment * (2 * self.pivot_time - self.elapsed_time)
 
+    def stop(self):
+        self.stop_flag.set()
+
     def func(self, task, game):
         if self.start_time is None:
             self.start_time = time.perf_counter()
@@ -123,7 +135,8 @@ class GradeTask(WaitForTask):
         img_copy = scale_rel(self.image.copy(), size)
         blit_center_rel(game.screen, img_copy, (0.8, 0.5))
 
-        self.runagain(game)
+        if not self.stop_flag.is_set():
+            self.runagain(game)
 
 
 class Result(TransitionableScene):
@@ -175,6 +188,8 @@ class Result(TransitionableScene):
                 self.start_fade(fadein=False, callback=self.fadeout_callback)
 
     def fadeout_callback(self, game):
+        self.result_task.stop()
+        self.grade_task.stop()
         game.set_scene(self.prev_scene)
 
     def start(self):
