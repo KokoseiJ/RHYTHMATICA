@@ -96,9 +96,9 @@ class Note(CircleEdge):
     def judge(self):
         diff = abs(self.time - time.perf_counter())
         logger.debug("%f", diff)
-        if diff > 0.5:
+        if diff > 0.4:
             return False, None
-        elif diff > 0.4:
+        elif diff > 0.2:
             return True, False
         else:
             return True, True
@@ -225,7 +225,7 @@ class Play(TransitionableScene):
 
     @property
     def is_ongoing(self):
-        return self.elapsed_time < self.song_length
+        return self.elapsed_time < self.song_length and self.channel.get_busy()
 
     def start(self):
         self.notedata = parse_notes(self.songdata.notedata)
@@ -279,8 +279,9 @@ class Play(TransitionableScene):
     def handle_event(self, event):
         if event.type == pygame.KEYDOWN or event.type == pygame.KEYUP:
             if event.key == pygame.K_q:
-                logger.info("q pressed, exiting the game")
-                self.game.stop()
+                if self.channel is not None:
+                    logger.info("q pressed, stopping the song...")
+                    self.channel.stop()
 
             keyname = pygame.key.name(event.key)
             if keyname in self.KEYS:
