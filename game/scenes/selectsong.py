@@ -93,7 +93,7 @@ class SongPack:
     def load_bulk(cls, game, path):
         return [
             cls.from_path(game, os.path.join(path, folder))
-            for folder in os.listdir(path)
+            for folder in sorted(os.listdir(path))
             if os.path.isdir(os.path.join(path, folder))
         ]
 
