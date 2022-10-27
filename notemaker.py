@@ -23,7 +23,7 @@ def cut_song(file, start, duration):
 def main():
     name = input("Name: ")
     artist = input("Artist: ")
-    bpm = int(input("BPM: "))
+    bpm = float(input("BPM: "))
 
     music = os.path.join(name, "song.wav")
 
@@ -66,6 +66,9 @@ def main():
 
                     elif event.key == pygame.K_f:
                         pygame.mixer.Sound(cut_song(music, start, spb)).play()
+
+                    elif event.key == pygame.K_v:
+                        pygame.mixer.Sound(cut_song(music, start, spb * 2)).play()
 
                     elif event.key == pygame.K_SPACE:
                         n += 1
@@ -124,6 +127,7 @@ def main():
 
     with open(os.path.join(name, "note.txt"), "w") as f:
         f.write("ver:A4\n")
+        f.write(f"b{bpm}\n")
         f.write("\n".join(notes) + "\n")
 
     return
