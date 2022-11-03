@@ -39,6 +39,7 @@ class Game:
 
     def init_pygame(self):
         logger.info("Initializing %s...", self.name)
+        # pygame.mixer.pre_init(44100, -16, 2, 128)
         pygame.init()
 
         self.screen = pygame.display.set_mode(self.size, self.flags)
