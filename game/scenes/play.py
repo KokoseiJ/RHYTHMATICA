@@ -112,6 +112,47 @@ class Note(CircleEdge):
         return self.radius_big + self.speed * time_
 
 
+class Judge:
+    MAXSIZE = 0.3
+    SIZE = 0.2
+    SIZE_DURATION = 1/8
+    SIZE_ACCEL = (SIZE - MAXSIZE) / SIZE_DURATION
+    ALPHA_DURATION = 1/2
+    ALPHA_ACCEL = -255 / ALPHA_DURATION
+
+    def __init__(self):
+        folder = os.path.join("res", "image", "judge")
+        self.hit = pygame.image.load(os.path.join(folder, "hit.png"))
+        self.miss = pygame.image.load(os.path.join(folder, "miss.png"))
+        self.hit = self.hit.convert_alpha()
+        self.miss = self.miss.convert_alpha()
+        
+        self.is_hit = True
+        self.start_time = 0
+
+    @property
+    def elapsed_time(self):
+        return time.perf_counter() - self.start_time
+
+    def show(self, is_hit):
+        self.start_time = time.perf_counter()
+        self.is_hit = is_hit
+
+    def draw(self, surface):
+        size = self.MAXSIZE + self.SIZE_ACCEL * self.elapsed_time
+        size = max(size, self.SIZE)
+        alpha_time = (self.elapsed_time - 2 * self.SIZE_DURATION)
+        alpha = 255 + self.ALPHA_ACCEL * alpha_time
+        alpha = max(0, min(255, alpha))
+        print(alpha)
+
+        if alpha > 0:
+            img = (self.hit if self.is_hit else self.miss).copy()
+            img = scale_rel(img, size, surface.get_size())
+            img.set_alpha(alpha)
+            blit_center_rel(surface, img, (0.5, 0.5))
+
+
 def parse_a3(data):
     return [[float(y) for y in x.split()] for x in data.split("/")[1:7]]
 
@@ -192,10 +233,7 @@ class Play(TransitionableScene):
         self.notedata = None
         self.notes = [list() for _ in range(6)]
 
-        self.hit = False
-        self.hit_duration = 1.5
-        self.hit_blink = 0.2
-        self.hit_show_until = 0
+        self.judge = Judge()
 
         self.hits = 0
         self.misses = 0
@@ -203,6 +241,10 @@ class Play(TransitionableScene):
         self.maxcombo = 0
         self.score = 0
         self.score_per_note = 10000 / self.songdata.notecount
+
+        self.score_start = 0
+        self.score_start_time = 0
+        self.score_duration = 0.5
 
         self.hit_image = None
         self.miss_image = None
@@ -227,18 +269,19 @@ class Play(TransitionableScene):
     def is_ongoing(self):
         return self.elapsed_time < self.song_length and self.channel.get_busy()
 
+    @property
+    def shown_score(self):
+        elapsed_time = time.perf_counter() - self.score_start_time
+        score_rate = (self.score - self.score_start) / self.score_duration
+        if elapsed_time > self.score_duration:
+            return self.score
+        else:
+            return self.score_start + score_rate * elapsed_time
+
     def start(self):
         self.notedata = parse_notes(self.songdata.notedata)
 
         screen_size = self.game.screen.get_size()
-
-        self.hit_image = pygame.image.load(
-            os.path.join("res", "image", "judge", "hit.png")).convert_alpha()
-        self.miss_image = pygame.image.load(
-            os.path.join("res", "image", "judge", "miss.png")).convert_alpha()
-
-        self.hit_image = scale_rel(self.hit_image, 2 / 7, screen_size)
-        self.miss_image = scale_rel(self.miss_image, 2 / 7, screen_size)
 
         self.bg_surface = pygame.Surface(screen_size)
 
@@ -310,21 +353,17 @@ class Play(TransitionableScene):
             self.combo += 1
             self.maxcombo = max(self.combo, self.maxcombo)
             self.score += self.score_per_note
+            self.score_start = self.shown_score
+            self.score_start_time = time.perf_counter()
         else:
             self.combo = 0
             self.misses += 1
 
     def show_judge(self, hit=True):
-        self.hit = hit
-        self.hit_show_until = time.perf_counter() + self.hit_duration
+        self.judge.show(hit)
 
     def show_judge_task(self, game):
-        now = time.perf_counter()
-        show = bool(int(now % self.hit_blink * 10))
-
-        if now < self.hit_show_until and show:
-            img = self.hit_image if self.hit else self.miss_image
-            blit_center_rel(game.screen, img, (0.5, 0.5))
+        self.judge.draw(game.screen)
 
         if self.is_ongoing:
             self.game.add_task(self.show_judge_task)
@@ -399,7 +438,7 @@ class Play(TransitionableScene):
         blit_center_rel(self.game.screen, titletxt, (0.5, 0), (0.5, 0))
 
         scoretxt = self.game.fonts['regular'].render(
-            str(round(self.score)), 1, 'black')
+            str(round(self.shown_score)), 1, 'black')
         blit_center_rel(self.game.screen, scoretxt, (0.5, 1), (0.5, 1))
 
         if self.combo >= 5:
